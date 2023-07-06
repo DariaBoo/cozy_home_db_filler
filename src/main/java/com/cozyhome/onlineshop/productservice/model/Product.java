@@ -1,57 +1,54 @@
 package com.cozyhome.onlineshop.productservice.model;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.cozyhome.onlineshop.productservice.model.enums.ProductCollection;
+import com.cozyhome.onlineshop.productservice.model.enums.ProductMaterial;
 import com.cozyhome.onlineshop.productservice.model.enums.ProductStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 @ToString
-@Document(collection = "testProduct")
+@Document(collection = "dataProduct")
 public class Product {
 
-    @Indexed
+    @Indexed(unique = true)
     private String skuCode;
-
     @Indexed
     private String name;
-
-    private String shortDescription;
     private String description;
-
+    private String shortDescription;
+    @Indexed
     private BigDecimal price;
-
+    private byte discount;
     @Indexed
     private ProductStatus status;
-
-    private ProductDetails productdetails;
-
-    private List<Color> colors = new ArrayList();
-    
-    private Byte discountPercent;
-    
-    private String productCollection;
-    
+    private ProductCollection productCollection;
     @Indexed
-    private ObjectId subcategoryId;
-    
+    private ObjectId categoryId;
     private LocalDateTime createdAt;
-
-    private LocalDateTime modifiedAt;        
+    private LocalDateTime modifiedAt;    
+    @Indexed
+    private float averageRating;
+    @Indexed
+    private List<ProductMaterial> materials;
+    private float weight;
+    private float height;
+    private float width;
+    private float depth;
+       
 }

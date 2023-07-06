@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.cozyhome.onlineshop.productservice.fill_database.DataCreator;
-import com.cozyhome.onlineshop.productservice.repository.CategoryRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,17 +13,16 @@ import lombok.RequiredArgsConstructor;
 @SpringBootApplication
 public class ProductServiceApplication {
 
-    private final DataCreator creator;
+    private final DataCreator dataCreator;
     
 	public static void main(String[] args) {
 		SpringApplication.run(ProductServiceApplication.class, args);
 	}
 	
-//	@Bean
-//	public CommandLineRunner loadData(CategoryRepository categoryRepository, DataCreator dataCreator) {
-//	    return args -> {
-//	        creator.createCategories(4, 5, 40000);
-//	    };
-//	}
-	
+	 @Bean
+  public CommandLineRunner loadData() {
+      return args -> {
+          dataCreator.createCategories();
+      };
+  }	
 }
