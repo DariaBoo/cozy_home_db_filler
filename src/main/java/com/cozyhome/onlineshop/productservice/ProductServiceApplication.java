@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.cozyhome.onlineshop.productservice.fill_database.DataCreator;
+import com.cozyhome.onlineshop.productservice.fill_database.DataBuilder;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @SpringBootApplication
 public class ProductServiceApplication {
 
-    private final DataCreator dataCreator;
+    private final DataBuilder dataBuilder;
     
 	public static void main(String[] args) {
 		SpringApplication.run(ProductServiceApplication.class, args);
@@ -22,7 +22,7 @@ public class ProductServiceApplication {
 	 @Bean
   public CommandLineRunner loadData() {
       return args -> {
-          dataCreator.createCategories();
+          dataBuilder.insertData();
       };
   }	
 }

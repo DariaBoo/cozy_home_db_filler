@@ -2,6 +2,7 @@ package com.cozyhome.onlineshop.productservice.model;
 
 
 import org.bson.types.ObjectId;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -20,11 +21,10 @@ public class Category {
 
     @Id
     private ObjectId id;
-
-    @Indexed(unique = true)
+    @UniqueElements
     private String name;
-
-    private boolean active;
-    
-    private ObjectId parentId;       
+    private boolean active;   
+    @Indexed
+    private ObjectId parentId;  
+    private String categoryImageName;
 }

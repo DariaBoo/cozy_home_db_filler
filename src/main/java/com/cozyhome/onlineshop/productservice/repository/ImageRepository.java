@@ -11,6 +11,6 @@ import com.cozyhome.onlineshop.productservice.model.Image;
 @Repository
 public interface ImageRepository extends MongoRepository<Image, ObjectId> {
 
-    Optional<Image> findByProductId(ObjectId productId);
+    Optional<Image> findByProductSkuCode(ObjectId productSkuCode);
 
 }

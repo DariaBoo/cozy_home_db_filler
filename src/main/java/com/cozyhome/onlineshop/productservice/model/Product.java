@@ -6,10 +6,11 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
-import com.cozyhome.onlineshop.productservice.model.enums.ProductCollection;
-import com.cozyhome.onlineshop.productservice.model.enums.ProductMaterial;
 import com.cozyhome.onlineshop.productservice.model.enums.ProductStatus;
 
 import lombok.AllArgsConstructor;
@@ -25,19 +26,19 @@ import lombok.ToString;
 @ToString
 @Document(collection = "dataProduct")
 public class Product {
-
     @Indexed(unique = true)
     private String skuCode;
-    @Indexed
     private String name;
     private String description;
     private String shortDescription;
     @Indexed
+    @Field(targetType = FieldType.DECIMAL128)
     private BigDecimal price;
     private byte discount;
     @Indexed
     private ProductStatus status;
-    private ProductCollection productCollection;
+    @DBRef
+    private Collection collection;
     @Indexed
     private ObjectId categoryId;
     private LocalDateTime createdAt;
@@ -45,10 +46,23 @@ public class Product {
     @Indexed
     private float averageRating;
     @Indexed
-    private List<ProductMaterial> materials;
-    private float weight;
-    private float height;
-    private float width;
-    private float depth;
+    @DBRef
+    private List<Material> materials;
+    
+    private Boolean transformation;
+    private Boolean heightRegulation;
+    
+    private Byte numberOfDoors;
+    private Byte numberOfDrawers;
+    
+    private Float bedLength;
+    private Float bedWidth;
+
+    private short maxLoad;
+
+    private Float weight;
+    private Float height;
+    private Float width;
+    private Float depth;
        
 }
