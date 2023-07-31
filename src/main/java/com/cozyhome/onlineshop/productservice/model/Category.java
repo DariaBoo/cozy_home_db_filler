@@ -27,4 +27,5 @@ public class Category {
     @Indexed
     private ObjectId parentId;  
     private String categoryImageName;
+    private String spriteIcon;
 }

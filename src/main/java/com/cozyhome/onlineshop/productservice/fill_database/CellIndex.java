@@ -3,6 +3,7 @@ package com.cozyhome.onlineshop.productservice.fill_database;
 public class CellIndex {
     public static final int CATEGORY_NAME = 1;
     public static final int CATEGORY_IMAGE_PATH = 30;
+    public static final int CATEGORY_SVG = 40;
     public static final int SUBCATEGORY_NAME = 2;
     public static final int PRODUCT_NAME = 3;
     public static final int PRODUCT_SKU = 0;

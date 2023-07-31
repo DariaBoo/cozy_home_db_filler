@@ -92,7 +92,7 @@ public class DataBuilder {
 				log.info("2.1 STEP");
 				checkName = categoryName;
 				String categoryImageName = readFromExcel(rowIndex, CellIndex.CATEGORY_IMAGE_PATH);
-				categoryId = buildCategory(categoryName, categoryImageName);
+				categoryId = buildCategory(categoryName, categoryImageName, rowIndex);
 			}
 
 			String subcategoryName = "";
@@ -136,11 +136,12 @@ public class DataBuilder {
 		}
 	}
 
-	private ObjectId buildCategory(String name, String imageName) {
+	private ObjectId buildCategory(String name, String imageName, int rowIndex) {
 		Category category = new Category();
 		category.setName(name);
 		category.setActive(true);
 		category.setCategoryImageName(imageName);
+		category.setSpriteIcon(readFromExcel(rowIndex, CellIndex.CATEGORY_SVG));
 
 		ObjectId categoryId = categoryRepo.save(category).getId();
 		log.info("Categoty with name: " + category.getName() + " is created!");
