@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -40,7 +39,8 @@ public class Product {
     @DBRef
     private Collection collection;
     @Indexed
-    private ObjectId categoryId;
+    @DBRef
+    private Category subCategory;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;    
     @Indexed

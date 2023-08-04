@@ -8,5 +8,5 @@ import com.cozyhome.onlineshop.productservice.model.Category;
 
 @Repository
 public interface CategoryRepository extends MongoRepository<Category, ObjectId> {
-
+    Category getCategoryById(ObjectId id);
 }

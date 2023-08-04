@@ -23,9 +23,9 @@ public class Category {
     private ObjectId id;
     @UniqueElements
     private String name;
-    private boolean active;   
+    private boolean active;
     @Indexed
-    private ObjectId parentId;  
+    private ObjectId parentId;
     private String categoryImageName;
     private String spriteIcon;
 }

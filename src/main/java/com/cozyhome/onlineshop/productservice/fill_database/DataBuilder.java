@@ -47,10 +47,10 @@ public class DataBuilder {
 	private final MaterialRepository materialRepo;
 	private final CollectionRepository collectionRepo;
 
-	private List<String> colors = new ArrayList<>();
-	private Map<String, String> hex = new HashMap<>();
-	private List<String> collections = new ArrayList<>();
-	private List<String> materials = new ArrayList<>();
+	private final List<String> colors = new ArrayList<>();
+	private final Map<String, String> hex = new HashMap<>();
+	private final List<String> collections = new ArrayList<>();
+	private final List<String> materials = new ArrayList<>();
 
 	{
 		colors.add("Сірий");
@@ -181,7 +181,9 @@ public class DataBuilder {
 				.status(ProductStatus.values()[new Random().nextInt(3)])
 				.collection(collectionRepo
 						.getByName(readFromExcel(rowIndex, CellIndex.PRODUCT_COLLECTION).toLowerCase().trim()))
-				.categoryId(categoryId).createdAt(LocalDateTime.now()).averageRating(5)
+				.subCategory(categoryRepo.getCategoryById(categoryId))
+				.createdAt(LocalDateTime.now())
+				.averageRating(5)
 				.materials(buildMaterialsList(rowIndex))
 				.weight(mapToFloat(readFromExcel(rowIndex, CellIndex.PRODUCT_WEIGHT)))
 				.height(mapToFloat(readFromExcel(rowIndex, CellIndex.PRODUCT_HEIGHT)))
