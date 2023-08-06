@@ -1,22 +1,31 @@
 package com.cozyhome.onlineshop.productservice.model.enums;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Getter
+@AllArgsConstructor
 public enum ProductStatus {
-    NEW("new"), POPULAR("popular"), REGULAR("regular"), DELETED("deleted");
-    private String description;
-    private ProductStatus(String description) {
-        this.description = description;
-    }
-    
-    public String getDescription() {
-        return this.description;
-    }
-    
-    public static ProductStatus getStatusByDescription(String description) {
-        for (ProductStatus status : ProductStatus.values()){
-            if(status.getDescription().equals(description)) {
-                return status;
-            }
+    NEW((byte) 0),
+    POPULAR((byte) 1),
+    REGULAR((byte) 2),
+    DELETED((byte) 3);
+
+    private final Byte description;
+
+    private static final Map<Byte, ProductStatus> PRODUCT_STATUS_MAP = new HashMap<>();
+
+    static {
+        for (ProductStatus element : values()) {
+            PRODUCT_STATUS_MAP.put(element.description, element);
         }
-        throw new IllegalArgumentException("Invalid product status description: " + description);
     }
+
+    public static ProductStatus valueOfDescription(Byte description) {
+        return PRODUCT_STATUS_MAP.get(description);
+    }
+
 }

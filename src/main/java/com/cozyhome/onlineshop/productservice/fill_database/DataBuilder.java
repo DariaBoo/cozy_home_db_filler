@@ -1,13 +1,22 @@
 package com.cozyhome.onlineshop.productservice.fill_database;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
+import com.cozyhome.onlineshop.productservice.model.Category;
+import com.cozyhome.onlineshop.productservice.model.Collection;
+import com.cozyhome.onlineshop.productservice.model.Color;
+import com.cozyhome.onlineshop.productservice.model.ImageCategory;
+import com.cozyhome.onlineshop.productservice.model.ImageProduct;
+import com.cozyhome.onlineshop.productservice.model.Material;
+import com.cozyhome.onlineshop.productservice.model.Product;
+import com.cozyhome.onlineshop.productservice.model.enums.ProductStatus;
+import com.cozyhome.onlineshop.productservice.repository.CategoryRepository;
+import com.cozyhome.onlineshop.productservice.repository.CollectionRepository;
+import com.cozyhome.onlineshop.productservice.repository.ColorRepository;
+import com.cozyhome.onlineshop.productservice.repository.ImageCategoryRepository;
+import com.cozyhome.onlineshop.productservice.repository.ImageProductRepository;
+import com.cozyhome.onlineshop.productservice.repository.MaterialRepository;
+import com.cozyhome.onlineshop.productservice.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -17,29 +26,22 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
-import com.cozyhome.onlineshop.productservice.model.Category;
-import com.cozyhome.onlineshop.productservice.model.Collection;
-import com.cozyhome.onlineshop.productservice.model.Color;
-import com.cozyhome.onlineshop.productservice.model.Image;
-import com.cozyhome.onlineshop.productservice.model.Material;
-import com.cozyhome.onlineshop.productservice.model.Product;
-import com.cozyhome.onlineshop.productservice.model.enums.ProductStatus;
-import com.cozyhome.onlineshop.productservice.repository.CategoryRepository;
-import com.cozyhome.onlineshop.productservice.repository.CollectionRepository;
-import com.cozyhome.onlineshop.productservice.repository.ColorRepository;
-import com.cozyhome.onlineshop.productservice.repository.ImageRepository;
-import com.cozyhome.onlineshop.productservice.repository.MaterialRepository;
-import com.cozyhome.onlineshop.productservice.repository.ProductRepository;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class DataBuilder {
 	private final CategoryRepository categoryRepo;
-	private final ImageRepository imageRepo;
+	//private final ImageRepository imageRepo;
+	private final ImageCategoryRepository imageCategoryRepo;
+	private final ImageProductRepository imageProductRepo;
 	private final ProductRepository productRepo;
 	private final ColorRepository colorRepo;
 	private final MaterialRepository materialRepo;
@@ -140,13 +142,22 @@ public class DataBuilder {
 		Category category = new Category();
 		category.setName(name);
 		category.setActive(true);
-		category.setCategoryImageName(imageName);
 		category.setSpriteIcon(readFromExcel(rowIndex, CellIndex.CATEGORY_SVG));
 
-		ObjectId categoryId = categoryRepo.save(category).getId();
+		Category savedCategory = categoryRepo.save(category);
 		log.info("Categoty with name: " + category.getName() + " is created!");
 
-		return categoryId;
+		if (!imageName.isEmpty()) {
+			ImageCategory image = ImageCategory.builder()
+					.imagePath(imageName)
+					.catalog(true)
+					.category(savedCategory)
+					.build();
+			imageCategoryRepo.save(image);
+			log.info("Image with path: " + image.getImagePath() + " is created!");
+		}
+
+		return savedCategory.getId();
 	}
 
 	private ObjectId buildSubcategory(String name, ObjectId categoryId) {
@@ -250,23 +261,35 @@ public class DataBuilder {
 		if (!color1.isEmpty()) {
 			String imagePath1 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_1_1);
 			if (!imagePath1.isEmpty()) {
-				Image image = Image.builder().imagePath(imagePath1).preview(true).color(colorRepo.getByName(color1))
-						.productSkuCode(productSkuCode).build();
-				imageRepo.save(image);
+				ImageProduct image = ImageProduct.builder()
+						.imagePath(imagePath1)
+						.preview(true)
+						.color(colorRepo.getByName(color1))
+						.product(productRepo.getProductBySkuCode(productSkuCode))
+						.build();
+				imageProductRepo.save(image);
 				log.info("Image with path: " + image.getImagePath() + " is created!");
 			}
 			String imagePath2 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_1_2);
 			if (!imagePath2.isEmpty()) {
-				Image image = Image.builder().imagePath(imagePath2).preview(true).color(colorRepo.getByName(color1))
-						.productSkuCode(productSkuCode).build();
-				imageRepo.save(image);
+				ImageProduct image = ImageProduct.builder()
+						.imagePath(imagePath2)
+						.preview(true)
+						.color(colorRepo.getByName(color1))
+						.product(productRepo.getProductBySkuCode(productSkuCode))
+						.build();
+				imageProductRepo.save(image);
 				log.info("Image with path: " + image.getImagePath() + " is created!");
 			}
 			String imagePath3 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_1_3);
 			if (!imagePath3.isEmpty()) {
-				Image image = Image.builder().imagePath(imagePath3).preview(true).color(colorRepo.getByName(color1))
-						.productSkuCode(productSkuCode).build();
-				imageRepo.save(image);
+				ImageProduct image = ImageProduct.builder()
+						.imagePath(imagePath3)
+						.preview(true)
+						.color(colorRepo.getByName(color1))
+						.product(productRepo.getProductBySkuCode(productSkuCode))
+						.build();
+				imageProductRepo.save(image);
 				log.info("Image with path: " + image.getImagePath() + " is created!");
 			}
 		}
@@ -274,23 +297,35 @@ public class DataBuilder {
 		if (!color2.isEmpty()) {
 			String imagePath1 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_2_1);
 			if (!imagePath1.isEmpty()) {
-				Image image = Image.builder().imagePath(imagePath1).preview(true).color(colorRepo.getByName(color2))
-						.productSkuCode(productSkuCode).build();
-				imageRepo.save(image);
+				ImageProduct image = ImageProduct.builder()
+						.imagePath(imagePath1)
+						.preview(true)
+						.color(colorRepo.getByName(color2))
+						.product(productRepo.getProductBySkuCode(productSkuCode))
+						.build();
+				imageProductRepo.save(image);
 				log.info("Image with path: " + image.getImagePath() + " is created!");
 			}
 			String imagePath2 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_2_2);
 			if (!imagePath2.isEmpty()) {
-				Image image = Image.builder().imagePath(imagePath2).preview(true).color(colorRepo.getByName(color2))
-						.productSkuCode(productSkuCode).build();
-				imageRepo.save(image);
+				ImageProduct image = ImageProduct.builder()
+						.imagePath(imagePath2)
+						.preview(true)
+						.color(colorRepo.getByName(color2))
+						.product(productRepo.getProductBySkuCode(productSkuCode))
+						.build();
+				imageProductRepo.save(image);
 				log.info("Image with path: " + image.getImagePath() + " is created!");
 			}
 			String imagePath3 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_2_3);
 			if (!imagePath3.isEmpty()) {
-				Image image = Image.builder().imagePath(imagePath3).preview(true).color(colorRepo.getByName(color2))
-						.productSkuCode(productSkuCode).build();
-				imageRepo.save(image);
+				ImageProduct image = ImageProduct.builder()
+						.imagePath(imagePath3)
+						.preview(true)
+						.color(colorRepo.getByName(color2))
+						.product(productRepo.getProductBySkuCode(productSkuCode))
+						.build();
+				imageProductRepo.save(image);
 				log.info("Image with path: " + image.getImagePath() + " is created!");
 			}
 		}
@@ -298,23 +333,35 @@ public class DataBuilder {
 		if (!color3.isEmpty()) {
 			String imagePath1 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_3_1);
 			if (!imagePath1.isEmpty()) {
-				Image image = Image.builder().imagePath(imagePath1).preview(true).color(colorRepo.getByName(color3))
-						.productSkuCode(productSkuCode).build();
-				imageRepo.save(image);
+				ImageProduct image = ImageProduct.builder()
+						.imagePath(imagePath1)
+						.preview(true)
+						.color(colorRepo.getByName(color3))
+						.product(productRepo.getProductBySkuCode(productSkuCode))
+						.build();
+				imageProductRepo.save(image);
 				log.info("Image with path: " + image.getImagePath() + " is created!");
 			}
 			String imagePath2 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_3_2);
 			if (!imagePath2.isEmpty()) {
-				Image image = Image.builder().imagePath(imagePath2).preview(true).color(colorRepo.getByName(color3))
-						.productSkuCode(productSkuCode).build();
-				imageRepo.save(image);
+				ImageProduct image = ImageProduct.builder()
+						.imagePath(imagePath2)
+						.preview(true)
+						.color(colorRepo.getByName(color3))
+						.product(productRepo.getProductBySkuCode(productSkuCode))
+						.build();
+				imageProductRepo.save(image);
 				log.info("Image with path: " + image.getImagePath() + " is created!");
 			}
 			String imagePath3 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_3_3);
 			if (!imagePath3.isEmpty()) {
-				Image image = Image.builder().imagePath(imagePath3).preview(true).color(colorRepo.getByName(color3))
-						.productSkuCode(productSkuCode).build();
-				imageRepo.save(image);
+				ImageProduct image = ImageProduct.builder()
+						.imagePath(imagePath3)
+						.preview(true)
+						.color(colorRepo.getByName(color3))
+						.product(productRepo.getProductBySkuCode(productSkuCode))
+						.build();
+				imageProductRepo.save(image);
 				log.info("Image with path: " + image.getImagePath() + " is created!");
 			}
 		}
