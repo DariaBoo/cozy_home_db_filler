@@ -5,9 +5,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -48,18 +46,13 @@ public class DataBuilder {
 	private final CollectionRepository collectionRepo;
 
 	private List<String> colors = new ArrayList<>();
-	private Map<String, String> hex = new HashMap<>();
 	private List<String> collections = new ArrayList<>();
 	private List<String> materials = new ArrayList<>();
 
 	{
-		colors.add("Сірий");
-		colors.add("Чорний");
-		colors.add("Коричневий");
-
-		hex.put("Сірий", "#545454");
-		hex.put("Чорний", "#291D0B");
-		hex.put("Коричневий", "#D99616");
+		colors.add("gray");
+		colors.add("black");
+		colors.add("orange");
 
 		collections.add("future");
 		collections.add("tenderness");
@@ -118,11 +111,9 @@ public class DataBuilder {
 		}
 	}
 
-	public void insertColors() {
+	private void insertColors() {
 		for (String color : colors) {
-			Color colorToSave = Color.builder()
-					.id(hex.get(color))
-					.name(color).active(true).build();
+			Color colorToSave = Color.builder().name(color).active(true).build();
 
 			colorRepo.save(colorToSave);
 			log.info("Color with name: " + color + " is created!");
@@ -181,13 +172,15 @@ public class DataBuilder {
 				.status(ProductStatus.values()[new Random().nextInt(3)])
 				.collection(collectionRepo
 						.getByName(readFromExcel(rowIndex, CellIndex.PRODUCT_COLLECTION).toLowerCase().trim()))
-				.categoryId(categoryId).createdAt(LocalDateTime.now()).averageRating(5)
+				.subCategory(categoryRepo.getCategoryById(categoryId))
+				.createdAt(LocalDateTime.now())
+				.averageRating(5)
 				.materials(buildMaterialsList(rowIndex))
 				.weight(mapToFloat(readFromExcel(rowIndex, CellIndex.PRODUCT_WEIGHT)))
 				.height(mapToFloat(readFromExcel(rowIndex, CellIndex.PRODUCT_HEIGHT)))
 				.width(mapToFloat(readFromExcel(rowIndex, CellIndex.PRODUCT_WIDTH)))
 				.depth(mapToFloat(readFromExcel(rowIndex, CellIndex.PRODUCT_DEPTH)))
-				.build();
+				.build();				
 
 		String result = productRepo.save(addAdditionalCharacteristics(product, rowIndex)).getSkuCode();
 		log.info("Product with name: " + product.getName() + " is created!");
@@ -231,7 +224,7 @@ public class DataBuilder {
 		}
 		return product;
 	}
-
+	
 	private List<Material> buildMaterialsList(int rowIndex) {
 		String material1 = readFromExcel(rowIndex, CellIndex.PRODUCT_MATERIAL_1);
 		String material2 = readFromExcel(rowIndex, CellIndex.PRODUCT_MATERIAL_2);
@@ -253,10 +246,6 @@ public class DataBuilder {
 		String color1 = readFromExcel(rowIndex, CellIndex.PRODUCT_COLOR_1).trim();
 		String color2 = readFromExcel(rowIndex, CellIndex.PRODUCT_COLOR_2).trim();
 		String color3 = readFromExcel(rowIndex, CellIndex.PRODUCT_COLOR_3).trim();
-
-		System.out.println(color1);
-		System.out.println(color2);
-		System.out.println(color3);
 
 		if (!color1.isEmpty()) {
 			String imagePath1 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_1_1);
@@ -330,18 +319,18 @@ public class DataBuilder {
 			}
 		}
 	}
-
+	
 	private short mapToShort(String value) {
 		if(!value.isEmpty()) {
 			return Short.parseShort(value);
 		}
 		return 0;
 	}
-
+	
 
 	private Float mapToFloat(String value) {
 		if(!value.isEmpty()) {
-			return Float.parseFloat(value);
+		return Float.parseFloat(value);
 		}
 		return null;
 	}
@@ -357,7 +346,7 @@ public class DataBuilder {
 		}
 		return (byte) x;
 	}
-
+	
 	private boolean mapToBoolean(String value) {
 		return Boolean.parseBoolean(value);
 	}
