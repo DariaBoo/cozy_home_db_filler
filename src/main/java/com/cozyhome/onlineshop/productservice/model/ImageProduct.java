@@ -1,15 +1,16 @@
 package com.cozyhome.onlineshop.productservice.model;
 
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 
 @NoArgsConstructor
@@ -28,8 +29,8 @@ public class ImageProduct extends Image {
     @Indexed
     private Product product;
 
-    public ImageProduct(ObjectId id, String imagePath, boolean preview, Color color, Product product) {
-        super(id, imagePath);
+    public ImageProduct(ObjectId id, String imagePath, String size, boolean preview, Color color, Product product) {
+        super(id, imagePath, size);
         this.preview = preview;
         this.color = color;
         this.product = product;

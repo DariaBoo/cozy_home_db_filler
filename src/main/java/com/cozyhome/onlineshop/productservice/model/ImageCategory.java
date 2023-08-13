@@ -27,8 +27,8 @@ public class ImageCategory extends Image {
     private Category category;
     private boolean catalog;
 
-    public ImageCategory(ObjectId id, String imagePath, Category category, boolean catalog) {
-        super(id, imagePath);
+    public ImageCategory(ObjectId id, String imagePath, String size, Category category, boolean catalog) {
+        super(id, imagePath, size);
         this.category = category;
         this.catalog = catalog;
     }

@@ -44,6 +44,7 @@ public class Product {
     private LocalDateTime modifiedAt;
     @Indexed
     private float averageRating;
+    private byte popularRating;
     @Indexed
     @DBRef
     private List<Material> materials;
