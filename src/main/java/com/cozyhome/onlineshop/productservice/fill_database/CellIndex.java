@@ -2,10 +2,10 @@ package com.cozyhome.onlineshop.productservice.fill_database;
 
 public class CellIndex {
     public static final int CATEGORY_NAME = 1;
-    public static final int CATEGORY_IMAGE_CATALOG = 45;
-    public static final int CATEGORY_SVG = 46;
-    public static final int CATEGORY_IMAGE_HOMEPAGE = 47;
-    public static final int CATEGORY_IMAGE_HOMEPAGE_SIZE = 48;
+    public static final int CATEGORY_IMAGE_CATALOG = 81;
+    public static final int CATEGORY_SVG = 82;
+    public static final int CATEGORY_IMAGE_HOMEPAGE = 83;
+    public static final int CATEGORY_IMAGE_HOMEPAGE_SIZE = 84;
     
     public static final int SUBCATEGORY_NAME = 2;
     
@@ -24,40 +24,20 @@ public class CellIndex {
     public static final int PRODUCT_MATERIAL_2 = 8;
     public static final int PRODUCT_MATERIAL_3 = 9;
     public static final int PRODUCT_COLOR_1 = 17;
-    public static final int PRODUCT_COLOR_2 = 26;
-    public static final int PRODUCT_COLOR_3 = 35;
-    public static final int PRODUCT_IMAGE_1_1 = 18;
-    public static final int PRODUCT_IMAGE_1_1_S = 19;
-    public static final int PRODUCT_IMAGE_1_2 = 20;
-    public static final int PRODUCT_IMAGE_1_2_S = 21;
-    public static final int PRODUCT_IMAGE_1_3 = 22;
-    public static final int PRODUCT_IMAGE_1_3_S = 23;  
-    public static final int PRODUCT_IMAGE_1_4 = 24;
-    public static final int PRODUCT_IMAGE_1_4_S = 25;  
-    public static final int PRODUCT_IMAGE_2_1 = 27;    
-    public static final int PRODUCT_IMAGE_2_1_S = 28;
-    public static final int PRODUCT_IMAGE_2_2 = 29;
-    public static final int PRODUCT_IMAGE_2_2_S = 30;
-    public static final int PRODUCT_IMAGE_2_3 = 31;
-    public static final int PRODUCT_IMAGE_2_3_S = 32;
-    public static final int PRODUCT_IMAGE_2_4 = 33;
-    public static final int PRODUCT_IMAGE_2_4_S = 34;    
-    public static final int PRODUCT_IMAGE_3_1 = 36;
-    public static final int PRODUCT_IMAGE_3_1_S = 37;
-    public static final int PRODUCT_IMAGE_3_2 = 38;
-    public static final int PRODUCT_IMAGE_3_2_S = 39;
-    public static final int PRODUCT_IMAGE_3_3 = 40;
-    public static final int PRODUCT_IMAGE_3_3_S = 41;
-    public static final int PRODUCT_IMAGE_3_4 = 42;
-    public static final int PRODUCT_IMAGE_3_4_S = 43;
+    public static final int PRODUCT_COLOR_2 = 38;
+    public static final int PRODUCT_COLOR_3 = 59;
     
-    public static final int PRODUCT_TRANSFORMATION = 49;
-    public static final int PRODUCT_BED_LENGHT = 51;		
-    public static final int PRODUCT_BED_WIDTH = 52;
-    public static final int PRODUCT_HEIGHT_REGULATION = 54;
-    public static final int PRODUCT_MAX_LOAD = 55;
-    public static final int PRODUCT_NUMBER_OF_DOORS = 56;
-    public static final int PRODUCT_NUMBER_OF_DRAWERS = 57;
+    public static final int PRODUCT_IMAGE_START_INDEX_COLOR1 = 18;
+    public static final int PRODUCT_IMAGE_START_INDEX_COLOR2 = 39;
+    public static final int PRODUCT_IMAGE_START_INDEX_COLOR3 = 60;    
+    
+    public static final int PRODUCT_TRANSFORMATION = 86;
+    public static final int PRODUCT_BED_LENGHT = 87;		
+    public static final int PRODUCT_BED_WIDTH = 88;
+    public static final int PRODUCT_HEIGHT_REGULATION = 90;
+    public static final int PRODUCT_MAX_LOAD = 91;
+    public static final int PRODUCT_NUMBER_OF_DOORS = 92;
+    public static final int PRODUCT_NUMBER_OF_DRAWERS = 93;
     
     private CellIndex() {
         

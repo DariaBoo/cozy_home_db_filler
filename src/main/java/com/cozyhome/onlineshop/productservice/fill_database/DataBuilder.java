@@ -47,7 +47,7 @@ public class DataBuilder {
 	private final ProductRepository productRepo;
 	private final ColorRepository colorRepo;
 	private final MaterialRepository materialRepo;
-	private final CollectionRepository collectionRepo;
+	private final CollectionRepository collectionRepo;	
 
 	private Map<String, String> colors = new HashMap<>();
 	private List<String> collections = new ArrayList<>();
@@ -85,7 +85,7 @@ public class DataBuilder {
 	private void buildData() {
 		log.info("1 STEP");
 
-		int rowIndex = 1;
+		int rowIndex = 2;
 
 		ObjectId categoryId = null;
 		String checkName = "";
@@ -118,7 +118,7 @@ public class DataBuilder {
 	private void insertColors() {
 		for (Map.Entry<String, String> entry : colors.entrySet()) {
 			String hex = entry.getKey();
-            String name = entry.getValue();
+			String name = entry.getValue();
 			Color colorToSave = Color.builder().id(hex).name(name).active(true).build();
 
 			colorRepo.save(colorToSave);
@@ -168,16 +168,17 @@ public class DataBuilder {
 	}
 
 	private void doBuildCategoryImage(String imageName, Category categry, boolean isCatalog) {
-		ImageCategory image = ImageCategory.builder().imagePath(imageName).catalog(isCatalog).category(categry).build();
+		ImageCategory image = ImageCategory.builder().categoryImageName(imageName).catalog(isCatalog).category(categry)
+				.build();
 		imageCategoryRepo.save(image);
-		log.info("Image with path: " + image.getImagePath() + " is created!");
+		log.info("Image with path: " + image.getCategoryImageName() + " is created!");
 	}
 
 	private void doBuildCategoryImage(String imageName, Category categry, boolean isCatalog, String imageSize) {
-		ImageCategory image = ImageCategory.builder().imagePath(imageName).imageSize(imageSize).catalog(isCatalog)
-				.category(categry).build();
+		ImageCategory image = ImageCategory.builder().categoryImageName(imageName).imageSize(imageSize)
+				.catalog(isCatalog).category(categry).build();
 		imageCategoryRepo.save(image);
-		log.info("Image with path: " + image.getImagePath() + " is created!");
+		log.info("Image with path: " + image.getCategoryImageName() + " is created!");
 	}
 
 	private ObjectId buildSubcategory(String name, ObjectId categoryId) {
@@ -272,130 +273,70 @@ public class DataBuilder {
 	}
 
 	private void buildImages(int rowIndex, String productSkuCode) {
-		final boolean isPreview = true;
-		final boolean isNotPreview = false;
+		int IMAGE_START_INDEX_COLOR1 = CellIndex.PRODUCT_IMAGE_START_INDEX_COLOR1;
+		int IMAGE_START_INDEX_COLOR2 = CellIndex.PRODUCT_IMAGE_START_INDEX_COLOR2;
+		int IMAGE_START_INDEX_COLOR3 = CellIndex.PRODUCT_IMAGE_START_INDEX_COLOR3;
+		final int countOfUniqueImages = 4;
+		final int nextStartIndex = 5;//count of image paths for every unique image
 
 		String color1 = readFromExcel(rowIndex, CellIndex.PRODUCT_COLOR_1).trim();
 		String color2 = readFromExcel(rowIndex, CellIndex.PRODUCT_COLOR_2).trim();
 		String color3 = readFromExcel(rowIndex, CellIndex.PRODUCT_COLOR_3).trim();
 
-		if (!color1.isEmpty()) {
-			String imagePath1 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_1_1);
-			if (!imagePath1.isEmpty()) {
-				doBuildProductImage(imagePath1, color1, productSkuCode, isPreview);
-			}
-			String imageSmallPath1 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_1_1_S);
-			if (!imageSmallPath1.isEmpty()) {
-				doBuildProductImage(imageSmallPath1, color1, productSkuCode, isNotPreview);
-			}
-			String imagePath2 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_1_2);
-			if (!imagePath2.isEmpty()) {
-				doBuildProductImage(imagePath2, color1, productSkuCode, isPreview);
-			}
-			String imageSmallPath2 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_1_2_S);
-			if (!imageSmallPath2.isEmpty()) {
-				doBuildProductImage(imageSmallPath2, color1, productSkuCode, isNotPreview);
-			}
-			String imagePath3 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_1_3);
-			if (!imagePath3.isEmpty()) {
-				doBuildProductImage(imagePath3, color1, productSkuCode, isPreview);
-			}
-			String imageSmallPath3 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_1_3_S);
-			if (!imageSmallPath3.isEmpty()) {
-				doBuildProductImage(imageSmallPath3, color1, productSkuCode, isNotPreview);
-			}
-			String imagePath4 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_1_4);
-			if (!imagePath3.isEmpty()) {
-				doBuildProductImage(imagePath4, color1, productSkuCode, isPreview);
-			}
-			String imageSmallPath4 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_1_4_S);
-			if (!imageSmallPath4.isEmpty()) {
-				doBuildProductImage(imageSmallPath4, color1, productSkuCode, isNotPreview);
+		Image imagePath;
+		if (!color1.isEmpty()) {			
+			for (int i = 0; i < countOfUniqueImages; i++) {
+				imagePath = readImagePaths(rowIndex, IMAGE_START_INDEX_COLOR1);
+				boolean isMain = i==0 ? true : false;
+				if (!imagePath.getPreviewImageName().isEmpty()) {
+					doBuildProductImage(color1, productSkuCode, imagePath, isMain);
+				}
+				IMAGE_START_INDEX_COLOR1 += nextStartIndex;
 			}
 		}
 
 		if (!color2.isEmpty()) {
-			String imagePath1 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_2_1);
-			if (!imagePath1.isEmpty()) {
-				doBuildProductImage(imagePath1, color2, productSkuCode, isPreview);
-			}
-			String imageSmallPath1 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_2_1_S);
-			if (!imageSmallPath1.isEmpty()) {
-				doBuildProductImage(imageSmallPath1, color1, productSkuCode, isNotPreview);
-			}
-			String imagePath2 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_2_2);
-			if (!imagePath2.isEmpty()) {
-				doBuildProductImage(imagePath2, color2, productSkuCode, isPreview);
-			}
-			String imageSmallPath2 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_2_2_S);
-			if (!imageSmallPath2.isEmpty()) {
-				doBuildProductImage(imageSmallPath2, color1, productSkuCode, isNotPreview);
-			}
-			String imagePath3 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_2_3);
-			if (!imagePath3.isEmpty()) {
-				doBuildProductImage(imagePath3, color2, productSkuCode, isPreview);
-			}
-			String imageSmallPath3 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_2_3_S);
-			if (!imageSmallPath3.isEmpty()) {
-				doBuildProductImage(imageSmallPath3, color1, productSkuCode, isNotPreview);
-			}
-			String imagePath4 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_2_4);
-			if (!imagePath3.isEmpty()) {
-				doBuildProductImage(imagePath4, color1, productSkuCode, isPreview);
-			}
-			String imageSmallPath4 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_2_4_S);
-			if (!imageSmallPath4.isEmpty()) {
-				doBuildProductImage(imageSmallPath4, color1, productSkuCode, isNotPreview);
+			for (int i = 0; i < countOfUniqueImages; i++) {
+				imagePath = readImagePaths(rowIndex, IMAGE_START_INDEX_COLOR2);
+				boolean isMain = i==0 ? true : false;
+				if (!imagePath.getPreviewImageName().isEmpty()) {
+					doBuildProductImage(color2, productSkuCode, imagePath, isMain);
+				}
+				IMAGE_START_INDEX_COLOR2 += nextStartIndex;
 			}
 		}
 
 		if (!color3.isEmpty()) {
-			String imagePath1 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_3_1);
-			if (!imagePath1.isEmpty()) {
-				doBuildProductImage(imagePath1, color3, productSkuCode, isPreview);
-			}
-			String imageSmallPath1 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_3_1_S);
-			if (!imageSmallPath1.isEmpty()) {
-				doBuildProductImage(imageSmallPath1, color1, productSkuCode, isNotPreview);
-			}
-			String imagePath2 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_3_2);
-			if (!imagePath2.isEmpty()) {
-				doBuildProductImage(imagePath2, color3, productSkuCode, isPreview);
-			}
-			String imageSmallPath2 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_3_2_S);
-			if (!imageSmallPath2.isEmpty()) {
-				doBuildProductImage(imageSmallPath2, color1, productSkuCode, isNotPreview);
-			}
-			String imagePath3 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_3_3);
-			if (!imagePath3.isEmpty()) {
-				doBuildProductImage(imagePath3, color3, productSkuCode, isPreview);
-			}
-			String imageSmallPath3 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_3_3_S);
-			if (!imageSmallPath3.isEmpty()) {
-				doBuildProductImage(imageSmallPath3, color1, productSkuCode, isNotPreview);
-			}
-			String imagePath4 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_3_4);
-			if (!imagePath3.isEmpty()) {
-				doBuildProductImage(imagePath4, color1, productSkuCode, isPreview);
-			}
-			String imageSmallPath4 = readFromExcel(rowIndex, CellIndex.PRODUCT_IMAGE_3_4_S);
-			if (!imageSmallPath4.isEmpty()) {
-				doBuildProductImage(imageSmallPath4, color1, productSkuCode, isNotPreview);
+			for (int i = 0; i < countOfUniqueImages; i++) {				
+				imagePath = readImagePaths(rowIndex, IMAGE_START_INDEX_COLOR3);
+				boolean isMain = i==0 ? true : false;
+				if (!imagePath.getPreviewImageName().isEmpty()) {
+					doBuildProductImage(color3, productSkuCode, imagePath, isMain);
+				}
+				IMAGE_START_INDEX_COLOR3 += nextStartIndex;
 			}
 		}
 	}
 
-	private void doBuildProductImage(String imagePath, String color, String productSkuCode, boolean preview) {
+	private Image readImagePaths(int rowIndex, int indexStart) {
+		Image imagePath = Image.builder().popUpImageName(readFromExcel(rowIndex, indexStart++))
+				.desktopImageName(readFromExcel(rowIndex, indexStart++))
+				.previewImageName(readFromExcel(rowIndex, indexStart++))
+				.mobileImageName(readFromExcel(rowIndex, indexStart++))
+				.sliderImageName(readFromExcel(rowIndex, indexStart++)).build();
+		return imagePath;
+	}
+
+	private void doBuildProductImage(String color, String productSkuCode, Image image, boolean isMain) {
 		Color colorToSave = colorRepo.getByName(color);
-		if (colorToSave != null) {
-			ImageProduct image = ImageProduct.builder().imagePath(imagePath)
-					.imageSize(
-							preview ? Image.ImageSize.LARGE_PRODUCT.getSize() : Image.ImageSize.SMALL_PRODUCT.getSize())
-					.preview(preview)
-					.color(colorToSave)
-					.product(productRepo.getProductBySkuCode(productSkuCode)).build();
-			imageProductRepo.save(image);
-			log.info("Image with path: " + image.getImagePath() + " is created!");
+		Product productToSave = productRepo.getProductBySkuCode(productSkuCode);
+		if (colorToSave != null && productToSave != null) {
+			ImageProduct imageToSave = ImageProduct.builder().color(colorToSave).product(productToSave)
+					.popUpImageName(image.getPopUpImageName()).desktopImageName(image.getDesktopImageName())
+					.previewImageName(image.getPreviewImageName()).mobileImageName(image.getMobileImageName())
+					.sliderImageName(image.getSliderImageName()).mainPhoto(isMain).build();
+			imageProductRepo.save(imageToSave);
+			log.info("Image with path: " + image.getPreviewImageName() + " is created!");
 		}
 	}
 

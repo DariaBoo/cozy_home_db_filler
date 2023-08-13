@@ -22,7 +22,7 @@ import java.util.List;
 @Builder
 @Data
 @ToString
-@Document(collection = "dataProduct")
+@Document(collection = "testProduct")
 public class Product {
     @Id
     private String skuCode;

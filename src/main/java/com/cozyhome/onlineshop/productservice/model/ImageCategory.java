@@ -1,41 +1,44 @@
 package com.cozyhome.onlineshop.productservice.model;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
-@Setter
-@Getter
-@EqualsAndHashCode(callSuper=true)
-@ToString(callSuper=true)
-@Document(collection = "dataImage")
-public class ImageCategory extends Image {
+@Builder
+@Data
+@Document(collection = "testImageCategory")
+public class ImageCategory {
+
+    @Id
+    private ObjectId id;
     @DBRef
     @Indexed
     private Category category;
     private boolean catalog;
+    private String imageSize;
+    private String categoryImageName;
+    
+    public enum ImageSize {
+        SMALL("304x250"),
+        LARGE("640x250");
 
-    public ImageCategory(ObjectId id, String imagePath, String size, Category category, boolean catalog) {
-        super(id, imagePath, size);
-        this.category = category;
-        this.catalog = catalog;
-    }
+        private final String size;
 
-    public ImageCategory(String imagePath, Category category, boolean catalog) {
-        super(imagePath);
-        this.category = category;
-        this.catalog = catalog;
+        ImageSize(String size) {
+            this.size = size;
+        }
+        public String getSize() {
+            return size;
+        }
     }
 }

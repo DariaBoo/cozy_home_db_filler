@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Builder
 @Data
-@Document(collection = "dataColor")
+@Document(collection = "testColor")
 public class Color {
     @Id
     private String id;

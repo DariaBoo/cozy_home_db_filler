@@ -23,7 +23,6 @@ public class ProductServiceApplication {
   public CommandLineRunner loadData() {
       return args -> {
           dataBuilder.insertData();
-          //dataBuilder.insertColors();
       };
   }	
 }
