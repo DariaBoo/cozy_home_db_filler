@@ -1,11 +1,11 @@
-package com.cozyhome.onlineshop.productservice.model;
+package com.cozyhome.onlineshop.productservice.dto;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Builder
 @Data
-public class Image {
+public class ImageDto {
 
 	private String popUpImageName;
     private String desktopImageName;

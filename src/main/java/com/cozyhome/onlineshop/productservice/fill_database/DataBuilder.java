@@ -1,9 +1,9 @@
 package com.cozyhome.onlineshop.productservice.fill_database;
 
+import com.cozyhome.onlineshop.productservice.dto.ImageDto;
 import com.cozyhome.onlineshop.productservice.model.Category;
 import com.cozyhome.onlineshop.productservice.model.Collection;
 import com.cozyhome.onlineshop.productservice.model.Color;
-import com.cozyhome.onlineshop.productservice.model.Image;
 import com.cozyhome.onlineshop.productservice.model.ImageCategory;
 import com.cozyhome.onlineshop.productservice.model.ImageProduct;
 import com.cozyhome.onlineshop.productservice.model.Material;
@@ -283,7 +283,7 @@ public class DataBuilder {
 		String color2 = readFromExcel(rowIndex, CellIndex.PRODUCT_COLOR_2).trim();
 		String color3 = readFromExcel(rowIndex, CellIndex.PRODUCT_COLOR_3).trim();
 
-		Image imagePath;
+		ImageDto imagePath;
 		if (!color1.isEmpty()) {			
 			for (int i = 0; i < countOfUniqueImages; i++) {
 				imagePath = readImagePaths(rowIndex, IMAGE_START_INDEX_COLOR1);
@@ -318,8 +318,8 @@ public class DataBuilder {
 		}
 	}
 
-	private Image readImagePaths(int rowIndex, int indexStart) {
-		Image imagePath = Image.builder().popUpImageName(readFromExcel(rowIndex, indexStart++))
+	private ImageDto readImagePaths(int rowIndex, int indexStart) {
+		ImageDto imagePath = ImageDto.builder().popUpImageName(readFromExcel(rowIndex, indexStart++))
 				.desktopImageName(readFromExcel(rowIndex, indexStart++))
 				.previewImageName(readFromExcel(rowIndex, indexStart++))
 				.mobileImageName(readFromExcel(rowIndex, indexStart++))
@@ -327,16 +327,16 @@ public class DataBuilder {
 		return imagePath;
 	}
 
-	private void doBuildProductImage(String color, String productSkuCode, Image image, boolean isMain) {
+	private void doBuildProductImage(String color, String productSkuCode, ImageDto imageDto, boolean isMain) {
 		Color colorToSave = colorRepo.getByName(color);
 		Product productToSave = productRepo.getProductBySkuCode(productSkuCode);
 		if (colorToSave != null && productToSave != null) {
 			ImageProduct imageToSave = ImageProduct.builder().color(colorToSave).product(productToSave)
-					.popUpImageName(image.getPopUpImageName()).desktopImageName(image.getDesktopImageName())
-					.previewImageName(image.getPreviewImageName()).mobileImageName(image.getMobileImageName())
-					.sliderImageName(image.getSliderImageName()).mainPhoto(isMain).build();
+					.popUpImageName(imageDto.getPopUpImageName()).desktopImageName(imageDto.getDesktopImageName())
+					.previewImageName(imageDto.getPreviewImageName()).mobileImageName(imageDto.getMobileImageName())
+					.sliderImageName(imageDto.getSliderImageName()).mainPhoto(isMain).build();
 			imageProductRepo.save(imageToSave);
-			log.info("Image with path: " + image.getPreviewImageName() + " is created!");
+			log.info("Image with path: " + imageDto.getPreviewImageName() + " is created!");
 		}
 	}
 
