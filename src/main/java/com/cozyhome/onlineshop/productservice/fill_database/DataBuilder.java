@@ -194,13 +194,16 @@ public class DataBuilder {
 	}
 
 	private String buildProduct(int rowIndex, ObjectId categoryId) {
-
+		BigDecimal price = new BigDecimal(readFromExcel(rowIndex, CellIndex.PRODUCT_PRICE));
+		String discount = readFromExcel(rowIndex, CellIndex.PRODUCT_DISCOUNT);
+		
 		Product product = Product.builder().skuCode(readFromExcel(rowIndex, CellIndex.PRODUCT_SKU))
 				.name(readFromExcel(rowIndex, CellIndex.PRODUCT_NAME))
 				.shortDescription(readFromExcel(rowIndex, CellIndex.PRODUCT_SHORT_DESCRIPTION))
 				.description(readFromExcel(rowIndex, CellIndex.PRODUCT_DESCRIPTION))
-				.price(new BigDecimal(readFromExcel(rowIndex, CellIndex.PRODUCT_PRICE)))
-				.discount(mapToByte(readFromExcel(rowIndex, CellIndex.PRODUCT_DISCOUNT)))
+				.price(price)
+				.discount(mapToByte(discount))
+				.priceWithDiscount(calculatePriceWithDiscount(price, discount))
 				.status(ProductStatus.values()[new Random().nextInt(3)])
 				.collection(collectionRepo
 						.getByName(readFromExcel(rowIndex, CellIndex.PRODUCT_COLLECTION).toLowerCase().trim()))
@@ -216,6 +219,13 @@ public class DataBuilder {
 		log.info("Product with name: " + product.getName() + " is created!");
 		return result;
 	}
+	
+	public BigDecimal calculatePriceWithDiscount(BigDecimal price, String discount) {
+	    if (discount.isEmpty()) {
+	      return price;
+	    }
+	    return price.subtract((price.multiply(new BigDecimal(discount))).divide(new BigDecimal(100)));
+	  }
 
 	private Product addAdditionalCharacteristics(Product product, int rowIndex) {
 		String transformation = readFromExcel(rowIndex, CellIndex.PRODUCT_TRANSFORMATION);

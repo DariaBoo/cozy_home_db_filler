@@ -34,6 +34,9 @@ public class Product {
     private BigDecimal price;
     private byte discount;
     @Indexed
+    @Field(targetType = FieldType.DECIMAL128)
+    private BigDecimal priceWithDiscount;
+    @Indexed
     private ProductStatus status;
     @DBRef
     private Collection collection;
