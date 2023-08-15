@@ -5,8 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.cozyhome.onlineshop.productservice.fill_database.DataBuilder;
-import com.cozyhome.onlineshop.productservice.fill_database.ProductUpdater;
+import com.cozyhome.onlineshop.productservice.fill_database.DataManager;
+import com.cozyhome.onlineshop.productservice.fill_database.DataUpdater;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,8 +14,8 @@ import lombok.RequiredArgsConstructor;
 @SpringBootApplication
 public class ProductServiceApplication {
 
-    private final DataBuilder dataBuilder;
-    private final ProductUpdater productUpdater;
+    private final DataManager dataManager;
+    private final DataUpdater dataUpdater;
     
 	public static void main(String[] args) {
 		SpringApplication.run(ProductServiceApplication.class, args);
@@ -24,8 +24,8 @@ public class ProductServiceApplication {
 	 @Bean
   public CommandLineRunner loadData() {
       return args -> {
-//          dataBuilder.insertData();
-    	  productUpdater.buildPriceWithDiscount();
+//    	  dataManager.createDataBase();
+    	  dataUpdater.updateProductDescription();
       };
   }	
 }

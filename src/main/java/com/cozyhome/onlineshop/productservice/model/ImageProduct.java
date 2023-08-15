@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Data
-@Document(collection = "testImageProduct11")
+@Document(collection = "testImageProduct1")
 public class ImageProduct {
 
 	  	@Id
