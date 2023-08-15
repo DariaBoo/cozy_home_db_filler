@@ -29,7 +29,8 @@ public class CellIndex {
     
     public static final int PRODUCT_IMAGE_START_INDEX_COLOR1 = 18;
     public static final int PRODUCT_IMAGE_START_INDEX_COLOR2 = 39;
-    public static final int PRODUCT_IMAGE_START_INDEX_COLOR3 = 60;    
+    public static final int PRODUCT_IMAGE_START_INDEX_COLOR3 = 60;   
+    public static final int PRODUCT_IMAGE_END_INDEX_COLOR3 = 79; 
     
     public static final int PRODUCT_TRANSFORMATION = 86;
     public static final int PRODUCT_BED_LENGHT = 87;		

@@ -5,9 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.cozyhome.onlineshop.productservice.model.ImageProduct;
+import com.cozyhome.onlineshop.productservice.dto.ProductMeasurementsDto;
 import com.cozyhome.onlineshop.productservice.model.Product;
-import com.cozyhome.onlineshop.productservice.repository.ImageProductRepository;
 import com.cozyhome.onlineshop.productservice.repository.ProductRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,9 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class DataUpdater {
 	private final ProductRepository productRepo;
-	private final ImageProductRepository imageProductRepo;
 	private final DataBuilder builder;
 	private final DataReader reader;
+	
+	private final int SKUCODE_COLUMN_INDEX = 0;
 
 	public void updatePriceWithDiscount() {
 		log.info("STEP 1[UPDATE PRICE WITH DISCOUNT]");
@@ -34,28 +34,64 @@ public class DataUpdater {
 					+ product.getPriceWithDiscount() + "].");
 		}
 	}
-	
+
 	public void updateImageProduct() {
-		int IMAGE_START_INDEX_COLOR1 = CellIndex.PRODUCT_IMAGE_START_INDEX_COLOR1;
-		int IMAGE_START_INDEX_COLOR2 = CellIndex.PRODUCT_IMAGE_START_INDEX_COLOR2;
-		int IMAGE_START_INDEX_COLOR3 = CellIndex.PRODUCT_IMAGE_START_INDEX_COLOR3;
-		List<ImageProduct> images = imageProductRepo.findAll();
-		
-	}
-	
-	public void updateProductDescription() {
-		int rowIndex = 2;
-		List<Product> products = productRepo.findAll();
-		for(Product product : products) {
-			String description = reader.readFromExcel(rowIndex, CellIndex.PRODUCT_DESCRIPTION);		
-			if(description.isEmpty()) {
-				rowIndex++;
-				description = reader.readFromExcel(rowIndex, CellIndex.PRODUCT_DESCRIPTION);
+		int rowIndex = RowIndex.FIRST_INDEX;
+		int lastRowIndex = RowIndex.LAST_INDEX;
+		while (rowIndex <= lastRowIndex) {
+			String productSkuCode = reader.readFromExcel(rowIndex, CellIndex.PRODUCT_SKU);
+			if (!productSkuCode.isEmpty()) {
+				log.info("CREATING IMAGES FOR PRODUCT WITH SKUCODE[" + productSkuCode + "]...");
+				builder.buildImages(rowIndex, productSkuCode);
 			}
-			product.setDescription(description);
-			productRepo.save(product);
-			log.info("PRODUCT WITH SKU[" + product.getSkuCode() + "] IS UPDATED WITH NEW DESCRIPTION");
 			rowIndex++;
 		}
+	}
+
+	public void updateProductDescription() {
+		List<Product> products = productRepo.findAll();
+		for (Product product : products) {
+			int rowIndex = reader.findRowIndexByValue(product.getSkuCode(), SKUCODE_COLUMN_INDEX);
+			String description = reader.readFromExcel(rowIndex, CellIndex.PRODUCT_DESCRIPTION);
+			if (!description.isEmpty()) {
+				product.setDescription(description);
+			}			
+			productRepo.save(product);
+			log.info("PRODUCT WITH SKU[" + product.getSkuCode() + "] IS UPDATED WITH NEW DESCRIPTION");
+		}
+	}
+
+	public void updateProductMeasurements() {		
+		List<Product> products = productRepo.findAll();
+		for (Product product : products) {
+			int rowIndex = reader.findRowIndexByValue(product.getSkuCode(), SKUCODE_COLUMN_INDEX);
+			ProductMeasurementsDto dto = reader.readProductMeasurements(rowIndex);
+			if (!dto.getWeight().isEmpty()) {
+				product.setWeight(convertToFormattedFloat(dto.getWeight()));
+			}
+			if(!dto.getHeight().isEmpty()) {
+				product.setHeight(convertToFormattedFloat(dto.getHeight()));
+			}
+			if(!dto.getWidth().isEmpty()) {
+				product.setWidth(convertToFormattedFloat(dto.getWidth()));
+			}
+			if(!dto.getDepth().isEmpty()) {
+				product.setDepth(convertToFormattedFloat(dto.getDepth()));
+			}
+			if (!dto.getBedLength().isEmpty()) {
+				product.setBedLength(convertToFormattedFloat(dto.getBedLength()));
+			}
+			if (!dto.getBedWidth().isEmpty()) {
+				product.setBedWidth(convertToFormattedFloat(dto.getBedWidth()));
+			}
+			productRepo.save(product);
+			log.info("PRODUCT WITH SKU[" + product.getSkuCode() + "] IS UPDATED WITH NEW MEASUREMENTS");
+		}
+	}
+
+	private Float convertToFormattedFloat(String value) {
+		Float floatValue = Float.parseFloat(value);
+        floatValue = Math.round(floatValue * 10.0f) / 10.0f;
+        return floatValue;
 	}
 }

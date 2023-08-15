@@ -215,7 +215,7 @@ public class DataBuilder {
 		return materials;
 	}
 
-	private void buildImages(int rowIndex, String productSkuCode) {
+	public void buildImages(int rowIndex, String productSkuCode) {
 		int IMAGE_START_INDEX_COLOR1 = CellIndex.PRODUCT_IMAGE_START_INDEX_COLOR1;
 		int IMAGE_START_INDEX_COLOR2 = CellIndex.PRODUCT_IMAGE_START_INDEX_COLOR2;
 		int IMAGE_START_INDEX_COLOR3 = CellIndex.PRODUCT_IMAGE_START_INDEX_COLOR3;

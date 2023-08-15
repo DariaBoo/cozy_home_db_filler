@@ -2,6 +2,7 @@ package com.cozyhome.onlineshop.productservice.fill_database;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -9,16 +10,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.cozyhome.onlineshop.productservice.dto.ImageDto;
-import com.cozyhome.onlineshop.productservice.repository.CategoryRepository;
-import com.cozyhome.onlineshop.productservice.repository.CollectionRepository;
-import com.cozyhome.onlineshop.productservice.repository.ColorRepository;
-import com.cozyhome.onlineshop.productservice.repository.ImageCategoryRepository;
-import com.cozyhome.onlineshop.productservice.repository.ImageProductRepository;
-import com.cozyhome.onlineshop.productservice.repository.MaterialRepository;
-import com.cozyhome.onlineshop.productservice.repository.ProductRepository;
+import com.cozyhome.onlineshop.productservice.dto.ProductMeasurementsDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,10 +23,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Component
 public class DataReader {
-	private final DataMapper dataMapper;
+	private final DataMapper mapper;
+	
+	@Value("${excel.file.path}")
+	private String path;
 
 	public String readFromExcel(int rowIndex, int columnIndex) {
-		String path = "products.xlsx";
 
 		try (InputStream input = DataBuilder.class.getClassLoader().getResourceAsStream(path);
 				Workbook workbook = WorkbookFactory.create(input)) {
@@ -40,9 +38,9 @@ public class DataReader {
 			if (cell != null) {
 				CellType cellType = cell.getCellType();
 				if (cellType == CellType.STRING) {
-					return dataMapper.mapToString(cell.getStringCellValue());
+					return mapper.mapToString(cell.getStringCellValue());
 				} else if (cellType == CellType.NUMERIC) {
-					return dataMapper.mapToString(cell.getNumericCellValue());
+					return mapper.mapToString(cell.getNumericCellValue());
 				}
 			}
 		} catch (IOException ex) {
@@ -50,7 +48,6 @@ public class DataReader {
 		}
 		return new String();
 	}
-	
 
 	public ImageDto readImagePaths(int rowIndex, int indexStart) {
 		ImageDto imagePath = ImageDto.builder().popUpImageName(readFromExcel(rowIndex, indexStart++))
@@ -59,5 +56,40 @@ public class DataReader {
 				.mobileImageName(readFromExcel(rowIndex, indexStart++))
 				.sliderImageName(readFromExcel(rowIndex, indexStart++)).build();
 		return imagePath;
+	}
+
+	public ProductMeasurementsDto readProductMeasurements(int rowIndex) {
+		ProductMeasurementsDto dto = ProductMeasurementsDto.builder()
+				.weight(readFromExcel(rowIndex, CellIndex.PRODUCT_WEIGHT))
+				.height(readFromExcel(rowIndex, CellIndex.PRODUCT_HEIGHT))
+				.width(readFromExcel(rowIndex, CellIndex.PRODUCT_WIDTH))
+				.depth(readFromExcel(rowIndex, CellIndex.PRODUCT_DEPTH))
+				.bedLength(readFromExcel(rowIndex, CellIndex.PRODUCT_BED_LENGHT))
+				.bedWidth(readFromExcel(rowIndex, CellIndex.PRODUCT_BED_WIDTH))
+				.build();
+		return dto;
+	}
+	
+	public int findRowIndexByValue(String targetValue, int columnIndex) {
+	    try (InputStream input = DataBuilder.class.getClassLoader().getResourceAsStream(path);
+	            Workbook workbook = WorkbookFactory.create(input)) {
+	        Sheet sheet = workbook.getSheetAt(0);
+	        for (int rowIndex = sheet.getFirstRowNum(); rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+	            Row row = sheet.getRow(rowIndex);
+	            if (row != null) {
+	                Cell cell = row.getCell(columnIndex);
+	                if (cell != null && cell.getCellType() == CellType.STRING) {
+	                    String cellValue = cell.getStringCellValue();
+	                    if (cellValue.equals(targetValue)) {
+	                        return rowIndex;
+	                    }
+	                }
+	            }
+	        }
+	    } catch (IOException ex) {
+	        ex.printStackTrace();
+	    }
+
+	    return -1; 
 	}
 }
