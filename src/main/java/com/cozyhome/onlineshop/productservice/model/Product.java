@@ -22,7 +22,7 @@ import java.util.List;
 @Builder
 @Data
 @ToString
-@Document(collection = "testProduct1")
+@Document(collection = "testProduct22")
 public class Product {
     @Id
     private String skuCode;
@@ -67,5 +67,7 @@ public class Product {
     private Float height;
     private Float width;
     private Float depth;
+
+    private Boolean productQuantityStatus;
 
 }
