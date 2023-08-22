@@ -147,7 +147,7 @@ public class DataBuilder {
 				.height(mapper.mapToFloat(reader.readFromExcel(rowIndex, CellIndex.PRODUCT_HEIGHT)))
 				.width(mapper.mapToFloat(reader.readFromExcel(rowIndex, CellIndex.PRODUCT_WIDTH)))
 				.depth(mapper.mapToFloat(reader.readFromExcel(rowIndex, CellIndex.PRODUCT_DEPTH)))
-				.productQuantityStatus(new Random().nextBoolean())
+				.available(new Random().nextBoolean())
 				.build();
 
 		String result = productRepo.save(addAdditionalCharacteristics(product, rowIndex)).getSkuCode();
