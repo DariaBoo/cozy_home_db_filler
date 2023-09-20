@@ -3,7 +3,9 @@ package com.cozyhome.onlineshop.productservice.fill_database;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.bson.types.ObjectId;
@@ -28,6 +30,10 @@ import com.cozyhome.onlineshop.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import static com.cozyhome.onlineshop.productservice.fill_database.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_17;
+import static com.cozyhome.onlineshop.productservice.fill_database.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_38;
+import static com.cozyhome.onlineshop.productservice.fill_database.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_59;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -40,7 +46,15 @@ public class DataBuilder {
 	private final MaterialRepository materialRepo;
 	private final CollectionRepository collectionRepo;
 	private final DataReader reader;
-	private final DataMapper mapper;	
+	private final DataMapper mapper;
+
+	private final Map<Integer, Integer> colorsQuantityConstants = new HashMap<>();
+
+	{
+		colorsQuantityConstants.put(0, PRODUCT_QUANTITY_FOR_COLOR_17);
+		colorsQuantityConstants.put(1, PRODUCT_QUANTITY_FOR_COLOR_38);
+		colorsQuantityConstants.put(2, PRODUCT_QUANTITY_FOR_COLOR_59);
+	}
 	
 	public void buildData() {
 		log.info("1 STEP");
@@ -147,7 +161,7 @@ public class DataBuilder {
 				.height(mapper.mapToFloat(reader.readFromExcel(rowIndex, CellIndex.PRODUCT_HEIGHT)))
 				.width(mapper.mapToFloat(reader.readFromExcel(rowIndex, CellIndex.PRODUCT_WIDTH)))
 				.depth(mapper.mapToFloat(reader.readFromExcel(rowIndex, CellIndex.PRODUCT_DEPTH)))
-				.available(new Random().nextBoolean())
+				.available(checkAvailable(rowIndex))
 				.build();
 
 		String result = productRepo.save(addAdditionalCharacteristics(product, rowIndex)).getSkuCode();
@@ -161,6 +175,35 @@ public class DataBuilder {
 	    }
 	    return price.subtract((price.multiply(new BigDecimal(discount))).divide(new BigDecimal(100)));
 	  }
+
+	private boolean checkAvailable(int rowIndex) {
+		boolean available = false;
+		int count = 0;
+
+		for (int i = 0; i < 3; i++) {
+			int quantity = 0;
+			String quantityString = reader.readFromExcel(rowIndex, colorsQuantityConstants.get(i)).trim();
+			quantity = convertToInt(quantityString);
+
+			if (!quantityString.isEmpty()) {
+				quantity = Math.round(Float.parseFloat(quantityString));
+			}
+			count = count + quantity;
+		}
+
+		if (count > 0) {
+			available = true;
+		}
+		return available;
+	}
+
+	private int convertToInt(String quantityString) {
+		int quantity = 0;
+		if (!quantityString.isEmpty()) {
+			quantity = Math.round(Float.parseFloat(quantityString));
+		}
+		return quantity;
+	}
 
 	private Product addAdditionalCharacteristics(Product product, int rowIndex) {
 		String transformation = reader.readFromExcel(rowIndex, CellIndex.PRODUCT_TRANSFORMATION);

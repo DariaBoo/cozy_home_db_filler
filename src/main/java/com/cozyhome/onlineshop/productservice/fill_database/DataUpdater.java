@@ -1,7 +1,9 @@
 package com.cozyhome.onlineshop.productservice.fill_database;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,10 @@ import com.cozyhome.onlineshop.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import static com.cozyhome.onlineshop.productservice.fill_database.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_17;
+import static com.cozyhome.onlineshop.productservice.fill_database.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_38;
+import static com.cozyhome.onlineshop.productservice.fill_database.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_59;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -19,8 +25,15 @@ public class DataUpdater {
 	private final ProductRepository productRepo;
 	private final DataBuilder builder;
 	private final DataReader reader;
+	private final Map<Integer, Integer> colorsQuantityConstants = new HashMap<>();
 	
 	private final int SKUCODE_COLUMN_INDEX = 0;
+
+	{
+		colorsQuantityConstants.put(0, PRODUCT_QUANTITY_FOR_COLOR_17);
+		colorsQuantityConstants.put(1, PRODUCT_QUANTITY_FOR_COLOR_38);
+		colorsQuantityConstants.put(2, PRODUCT_QUANTITY_FOR_COLOR_59);
+	}
 
 	public void updatePriceWithDiscount() {
 		log.info("STEP 1[UPDATE PRICE WITH DISCOUNT]");
@@ -48,6 +61,37 @@ public class DataUpdater {
 		}
 	}
 
+	public void updateProductAvailable() {
+		List<Product> products = productRepo.findAll();
+
+		for (Product product : products) {
+			boolean available = false;
+			int count = 0;
+			int rowIndex = reader.findRowIndexByValue(product.getSkuCode(), CellIndex.PRODUCT_SKU);
+
+			for (int i = 0; i < 3; i++) {
+				String quantityString = reader.readFromExcel(rowIndex, colorsQuantityConstants.get(i)).trim();
+				int quantity;
+
+				if (quantityString.isEmpty()) {
+					quantity = 0;
+				} else {
+					quantity = Math.round(Float.parseFloat(quantityString));
+				}
+				count = count + quantity;
+			}
+
+			if (count > 0) {
+				available = true;
+			}
+
+
+			product.setAvailable(available);
+			productRepo.save(product);
+			log.info("PRODUCT WITH SKU[" + product.getSkuCode() + "] IS UPDATED WITH NEW AVAILABLE: " + available);
+		}
+	}
+
 	public void updateProductDescription() {
 		List<Product> products = productRepo.findAll();
 		for (Product product : products) {
@@ -55,7 +99,7 @@ public class DataUpdater {
 			String description = reader.readFromExcel(rowIndex, CellIndex.PRODUCT_DESCRIPTION);
 			if (!description.isEmpty()) {
 				product.setDescription(description);
-			}			
+			}
 			productRepo.save(product);
 			log.info("PRODUCT WITH SKU[" + product.getSkuCode() + "] IS UPDATED WITH NEW DESCRIPTION");
 		}

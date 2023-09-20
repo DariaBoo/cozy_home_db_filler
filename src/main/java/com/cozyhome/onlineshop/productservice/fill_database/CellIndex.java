@@ -39,6 +39,9 @@ public class CellIndex {
     public static final int PRODUCT_MAX_LOAD = 91;
     public static final int PRODUCT_NUMBER_OF_DOORS = 92;
     public static final int PRODUCT_NUMBER_OF_DRAWERS = 93;
+    public static final int PRODUCT_QUANTITY_FOR_COLOR_17 = 94;
+    public static final int PRODUCT_QUANTITY_FOR_COLOR_38 = 95;
+    public static final int PRODUCT_QUANTITY_FOR_COLOR_59 = 96;
     
     private CellIndex() {
         

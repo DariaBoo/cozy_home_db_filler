@@ -25,6 +25,7 @@ public class ProductServiceApplication {
   public CommandLineRunner loadData() {
       return args -> {
     	  dataManager.createDataBase();
+//          dataUpdater.updateProductAvailable();
 //    	  dataUpdater.updateProductDescription();
     	  //dataUpdater.updateProductMeasurements();
       };
