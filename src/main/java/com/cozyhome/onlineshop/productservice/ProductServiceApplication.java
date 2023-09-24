@@ -24,7 +24,8 @@ public class ProductServiceApplication {
 	 @Bean
   public CommandLineRunner loadData() {
       return args -> {
-    	  dataManager.createDataBase();
+    	  dataManager.createUserDataBase();
+//    	  dataManager.createProductDataBase();
 //          dataUpdater.updateProductAvailable();
 //    	  dataUpdater.updateProductDescription();
     	  //dataUpdater.updateProductMeasurements();
