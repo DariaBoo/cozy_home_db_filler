@@ -27,7 +27,8 @@ public class DataReader {
 	
 	@Value("${excel.file.path}")
 	private String path;
-
+	
+	
 	public String readFromExcel(int rowIndex, int columnIndex) {
 
 		try (InputStream input = DataBuilder.class.getClassLoader().getResourceAsStream(path);
