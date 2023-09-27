@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
@@ -108,7 +109,7 @@ public class DataInserter {
 	public void insertUsers() {
 		for(User user : users) {
 			Role role = roleRepo.getByName(user.getFirstName());
-			user.setRole(role);
+			user.setRoles(Set.of(role));
 			userRepo.save(user);
 			log.info("User with username: " + user.getEmail() + " is created!");
 		}

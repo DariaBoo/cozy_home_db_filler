@@ -1,6 +1,7 @@
 package com.cozyhome.onlineshop.model;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.annotation.Id;
@@ -46,7 +47,7 @@ public class User {
 	private String phoneNumber;
 
 	@DBRef
-	private Role role;
+	private Set<Role> roles;
 	
 	private LocalDateTime createdAt;
 	
