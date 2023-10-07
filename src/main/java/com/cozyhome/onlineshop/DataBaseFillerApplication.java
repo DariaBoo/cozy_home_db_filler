@@ -16,13 +16,13 @@ public class DataBaseFillerApplication {
 
     private final DataManager dataManager;
     private final DataUpdater dataUpdater;
-    
-	public static void main(String[] args) {
+
+    public static void main(String[] args) {
 		SpringApplication.run(DataBaseFillerApplication.class, args);
 	}
-	
-	 @Bean
-  public CommandLineRunner loadData() {
+
+    @Bean
+    public CommandLineRunner loadData() {
       return args -> {
     	  dataManager.createUserRoleDataBase();
 //    	  dataManager.createProductDataBase();
@@ -30,5 +30,5 @@ public class DataBaseFillerApplication {
 //    	  dataUpdater.updateProductDescription();
     	  //dataUpdater.updateProductMeasurements();
       };
-  }	
+  }
 }

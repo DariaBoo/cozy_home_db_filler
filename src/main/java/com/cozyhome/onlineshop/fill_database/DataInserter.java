@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.cozyhome.onlineshop.model.Collection;
@@ -31,6 +32,7 @@ public class DataInserter {
 	private final CollectionRepository collectionRepo;
 	private final RoleRepository roleRepo;
 	private final UserRepository userRepo;
+	private final PasswordEncoder encoder;
 
 	private Map<String, String> colors = new HashMap<>();
 	private List<String> collections = new ArrayList<>();
@@ -183,12 +185,20 @@ public class DataInserter {
 			log.info("Role: " + name + " is created!");
 		}
 	}
-	
+
 	public void insertUsers() {
 		for(User user : users) {
 			Role role = roleRepo.getByName(user.getFirstName());
-			user.setRole(role);
-			userRepo.save(user);
+			User userToSave = User.builder()
+					.email(user.getEmail())
+					.firstName(user.getFirstName())
+					.lastName(user.getLastName())
+					.password(encoder.encode(user.getPassword()))
+					.status(User.UserStatus.ACTIVE)
+					.createdAt(LocalDateTime.now())
+					.role(role)
+					.build();
+			userRepo.save(userToSave);
 			log.info("User with username: " + user.getEmail() + " is created!");
 		}
 	}
