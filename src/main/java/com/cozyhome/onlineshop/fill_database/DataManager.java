@@ -22,7 +22,7 @@ public class DataManager {
 	
 	public void createUserRoleDataBase() {
 		log.info("0 STEP[CREATE USER DATABASE]");
-		inserter.insertRoles();
+		//inserter.insertRoles();
 		inserter.insertUsers();
 	}
 	
