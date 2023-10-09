@@ -67,17 +67,16 @@ public class DataInserter {
 				.email("admin@gmail.com")
 				.firstName("ADMIN")
 				.lastName("admin")
-				.password("admiN1$")
+				.password("admiN1$2")
 				.status(User.UserStatus.ACTIVE)
 				.createdAt(LocalDateTime.now())
 				.build());
 		users.add(User.builder().email("manager@gmail.com").firstName("MANAGER").lastName("manager")
 				.password("manageR1$").status(User.UserStatus.ACTIVE).createdAt(LocalDateTime.now()).build());
-		users.add(User.builder().email("customer@gmail.com").firstName("Абрамчук").lastName("Юрій")
+		users.add(User.builder().email("customer1.cozy.home@gmail.com").firstName("Шевченко").lastName("Микола")
 				.password("customer12W$").status(User.UserStatus.ACTIVE).createdAt(LocalDateTime.now()).build());
 
-
-		users.add(User.builder().email("customer1@gmail.com").firstName("Шевченко").lastName("Микола")
+		users.add(User.builder().email("customer1@gmail.com").firstName("Абрамчук").lastName("Юрій")
 				.password("customer12W$").status(User.UserStatus.ACTIVE).createdAt(LocalDateTime.now()).build());
 		users.add(User.builder().email("customer2@gmail.com").firstName("Березюк").lastName("Аліна")
 				.password("customer12W$").status(User.UserStatus.ACTIVE).createdAt(LocalDateTime.now()).build());
