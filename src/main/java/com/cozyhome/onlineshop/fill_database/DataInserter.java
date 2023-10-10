@@ -68,6 +68,7 @@ public class DataInserter {
 				.firstName("ADMIN")
 				.lastName("admin")
 				.password("admiN1$2")
+				.phoneNumber("+38 (123) 123 - 45 - 67")
 				.status(User.UserStatus.ACTIVE)
 				.createdAt(LocalDateTime.now())
 				.build());

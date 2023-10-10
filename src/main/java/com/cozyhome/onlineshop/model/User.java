@@ -1,5 +1,6 @@
 package com.cozyhome.onlineshop.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.validator.constraints.UniqueElements;
@@ -44,6 +45,8 @@ public class User {
 	
 	@UniqueElements
 	private String phoneNumber;
+
+	private LocalDate birthday;
 
 	@DBRef
 	private Role role;
