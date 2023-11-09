@@ -20,9 +20,9 @@ public class Role {
     private RoleE name;
     
     public enum RoleE{
-		ADMIN,
-		CUSTOMER,
-		MANAGER;    	    	
+    	ROLE_ADMIN,
+		ROLE_CUSTOMER,
+		ROLE_MANAGER;    	    	
 	}
     
 }

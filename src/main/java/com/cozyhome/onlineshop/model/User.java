@@ -43,6 +43,8 @@ public class User {
 
 	private String lastName;
 	
+	private String activationToken;
+	
 	@UniqueElements
 	private String phoneNumber;
 

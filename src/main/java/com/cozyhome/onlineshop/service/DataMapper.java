@@ -1,14 +1,6 @@
-package com.cozyhome.onlineshop.fill_database;
+package com.cozyhome.onlineshop.service;
 
 import org.springframework.stereotype.Component;
-
-import com.cozyhome.onlineshop.repository.CategoryRepository;
-import com.cozyhome.onlineshop.repository.CollectionRepository;
-import com.cozyhome.onlineshop.repository.ColorRepository;
-import com.cozyhome.onlineshop.repository.ImageCategoryRepository;
-import com.cozyhome.onlineshop.repository.ImageProductRepository;
-import com.cozyhome.onlineshop.repository.MaterialRepository;
-import com.cozyhome.onlineshop.repository.ProductRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

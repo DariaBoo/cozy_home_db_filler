@@ -1,4 +1,4 @@
-package com.cozyhome.onlineshop.fill_database;
+package com.cozyhome.onlineshop.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.cozyhome.onlineshop.model.Collection;
@@ -58,16 +59,21 @@ public class DataInserter {
 		materials.add("Дерево");
 		materials.add("Шкіра");
 
-		roleNames.add(Role.RoleE.ADMIN);
-		roleNames.add(Role.RoleE.MANAGER);
-		roleNames.add(Role.RoleE.CUSTOMER);
+		roleNames.add(Role.RoleE.ROLE_ADMIN);
+		roleNames.add(Role.RoleE.ROLE_MANAGER);
+		roleNames.add(Role.RoleE.ROLE_CUSTOMER);
+		
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String hashedAdminPassword = passwordEncoder.encode("admin");
+		String hashedManagerPassword = passwordEncoder.encode("manager");
+		String hashedCustomerPassword = passwordEncoder.encode("customer");
 
 		users.add(User.builder().email("admin@gmail.com").firstName("ADMIN").lastName("admin")
-				.password("admin").status(User.UserStatus.ACTIVE).createdAt(LocalDateTime.now()).build());
+				.password(hashedAdminPassword).status(User.UserStatus.ACTIVE).createdAt(LocalDateTime.now()).build());
 		users.add(User.builder().email("manager@gmail.com").firstName("MANAGER").lastName("manager")
-				.password("manager").status(User.UserStatus.ACTIVE).createdAt(LocalDateTime.now()).build());
+				.password(hashedManagerPassword).status(User.UserStatus.ACTIVE).createdAt(LocalDateTime.now()).build());
 		users.add(User.builder().email("customer@gmail.com").firstName("CUSTOMER").lastName("customer")
-				.password("customer").status(User.UserStatus.ACTIVE).createdAt(LocalDateTime.now()).build());
+				.password(hashedCustomerPassword).status(User.UserStatus.ACTIVE).createdAt(LocalDateTime.now()).build());
 	}
 
 	public void insertColors() {

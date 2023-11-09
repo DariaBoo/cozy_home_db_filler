@@ -1,8 +1,8 @@
-package com.cozyhome.onlineshop.fill_database;
+package com.cozyhome.onlineshop.service;
 
-import static com.cozyhome.onlineshop.fill_database.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_17;
-import static com.cozyhome.onlineshop.fill_database.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_38;
-import static com.cozyhome.onlineshop.fill_database.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_59;
+import static com.cozyhome.onlineshop.util.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_17;
+import static com.cozyhome.onlineshop.util.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_38;
+import static com.cozyhome.onlineshop.util.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_59;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -30,6 +30,7 @@ import com.cozyhome.onlineshop.repository.ImageCategoryRepository;
 import com.cozyhome.onlineshop.repository.ImageProductRepository;
 import com.cozyhome.onlineshop.repository.MaterialRepository;
 import com.cozyhome.onlineshop.repository.ProductRepository;
+import com.cozyhome.onlineshop.util.CellIndex;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class DataBuilder {
+public class MongoBuilder {
 	private final CategoryRepository categoryRepo;
 	private final ImageCategoryRepository imageCategoryRepo;
 	private final ImageProductRepository imageProductRepo;

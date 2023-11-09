@@ -1,8 +1,8 @@
-package com.cozyhome.onlineshop.fill_database;
+package com.cozyhome.onlineshop.service;
 
-import static com.cozyhome.onlineshop.fill_database.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_17;
-import static com.cozyhome.onlineshop.fill_database.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_38;
-import static com.cozyhome.onlineshop.fill_database.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_59;
+import static com.cozyhome.onlineshop.util.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_17;
+import static com.cozyhome.onlineshop.util.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_38;
+import static com.cozyhome.onlineshop.util.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_59;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import com.cozyhome.onlineshop.dto.ProductMeasurementsDto;
 import com.cozyhome.onlineshop.model.Product;
 import com.cozyhome.onlineshop.repository.ProductRepository;
+import com.cozyhome.onlineshop.util.CellIndex;
+import com.cozyhome.onlineshop.util.RowIndex;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class DataUpdater {
 	private final ProductRepository productRepo;
-	private final DataBuilder builder;
+	private final MongoBuilder builder;
 	private final DataReader reader;
 	private final Map<Integer, Integer> colorsQuantityConstants = new HashMap<>();
 	

@@ -1,4 +1,4 @@
-package com.cozyhome.onlineshop.fill_database;
+package com.cozyhome.onlineshop.service;
 
 import org.springframework.stereotype.Component;
 
@@ -8,9 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class DataManager {
+public class MongoManager {
 	private final DataInserter inserter;
-	private final DataBuilder builder;
+	private final MongoBuilder builder;
 
 	public void createProductDataBase() {
 		log.info("0 STEP[CREATE PRODUCT DATABASE]");

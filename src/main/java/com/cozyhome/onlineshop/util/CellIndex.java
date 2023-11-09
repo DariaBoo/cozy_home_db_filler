@@ -1,4 +1,4 @@
-package com.cozyhome.onlineshop.fill_database;
+package com.cozyhome.onlineshop.util;
 
 public class CellIndex {
     public static final int CATEGORY_NAME = 1;
