@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -59,9 +60,9 @@ public class DataInserter {
 		materials.add("Дерево");
 		materials.add("Шкіра");
 
-		roleNames.add(Role.RoleE.ADMIN);
-		roleNames.add(Role.RoleE.MANAGER);
-		roleNames.add(Role.RoleE.CUSTOMER);
+		roleNames.add(Role.RoleE.ROLE_ADMIN);
+		roleNames.add(Role.RoleE.ROLE_MANAGER);
+		roleNames.add(Role.RoleE.ROLE_CUSTOMER);
 
 		users.add(User.builder()
 				.email("admin@gmail.com")
@@ -188,7 +189,7 @@ public class DataInserter {
 
 	public void insertUsers() {
 		for(User user : users) {
-			Role role = roleRepo.getByName(user.getFirstName());
+			Role role = roleRepo.getByName(user.getFirstName());			
 			User userToSave = User.builder()
 					.email(user.getEmail())
 					.firstName(user.getFirstName())
@@ -196,7 +197,7 @@ public class DataInserter {
 					.password(encoder.encode(user.getPassword()))
 					.status(User.UserStatus.ACTIVE)
 					.createdAt(LocalDateTime.now())
-					.role(role)
+					.roles(Set.of(role))
 					.build();
 			userRepo.save(userToSave);
 			log.info("User with username: " + user.getEmail() + " is created!");
