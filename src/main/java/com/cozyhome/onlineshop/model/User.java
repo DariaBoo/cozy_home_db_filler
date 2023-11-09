@@ -1,5 +1,6 @@
 package com.cozyhome.onlineshop.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -10,8 +11,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -47,6 +46,8 @@ public class User {
 	
 	@UniqueElements
 	private String phoneNumber;
+
+	private LocalDate birthday;
 
 	@DBRef
 	private Set<Role> roles;
