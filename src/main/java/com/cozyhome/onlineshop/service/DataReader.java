@@ -1,8 +1,7 @@
-package com.cozyhome.onlineshop.fill_database;
+package com.cozyhome.onlineshop.service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Optional;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.cozyhome.onlineshop.dto.ImageDto;
 import com.cozyhome.onlineshop.dto.ProductMeasurementsDto;
+import com.cozyhome.onlineshop.util.CellIndex;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class DataReader {
 	
 	public String readFromExcel(int rowIndex, int columnIndex) {
 
-		try (InputStream input = DataBuilder.class.getClassLoader().getResourceAsStream(path);
+		try (InputStream input = MongoBuilder.class.getClassLoader().getResourceAsStream(path);
 				Workbook workbook = WorkbookFactory.create(input)) {
 			Sheet sheet = workbook.getSheetAt(0);
 			Row row = sheet.getRow(rowIndex);
@@ -72,7 +72,7 @@ public class DataReader {
 	}
 	
 	public int findRowIndexByValue(String targetValue, int columnIndex) {
-	    try (InputStream input = DataBuilder.class.getClassLoader().getResourceAsStream(path);
+	    try (InputStream input = MongoBuilder.class.getClassLoader().getResourceAsStream(path);
 	            Workbook workbook = WorkbookFactory.create(input)) {
 	        Sheet sheet = workbook.getSheetAt(0);
 	        for (int rowIndex = sheet.getFirstRowNum(); rowIndex <= sheet.getLastRowNum(); rowIndex++) {
