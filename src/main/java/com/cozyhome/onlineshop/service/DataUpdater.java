@@ -15,6 +15,7 @@ import com.cozyhome.onlineshop.dto.ProductMeasurementsDto;
 import com.cozyhome.onlineshop.model.Product;
 import com.cozyhome.onlineshop.repository.ProductRepository;
 import com.cozyhome.onlineshop.util.CellIndex;
+import com.cozyhome.onlineshop.util.DataReader;
 import com.cozyhome.onlineshop.util.RowIndex;
 
 import lombok.RequiredArgsConstructor;
@@ -104,6 +105,30 @@ public class DataUpdater {
 			}
 			productRepo.save(product);
 			log.info("PRODUCT WITH SKU[" + product.getSkuCode() + "] IS UPDATED WITH NEW DESCRIPTION");
+		}
+	}
+	public void updateProductName() {
+		List<Product> products = productRepo.findAll();
+		for (Product product : products) {
+			int rowIndex = reader.findRowIndexByValue(product.getSkuCode(), SKUCODE_COLUMN_INDEX);
+			String name = reader.readFromExcel(rowIndex, CellIndex.PRODUCT_NAME);
+			if (!name.isEmpty()) {
+				product.setName(name);
+			}
+			productRepo.save(product);
+			log.info("PRODUCT WITH SKU[" + product.getSkuCode() + "] IS UPDATED WITH NEW NAME");
+		}
+	}
+	public void updateProductShortDescription() {
+		List<Product> products = productRepo.findAll();
+		for (Product product : products) {
+			int rowIndex = reader.findRowIndexByValue(product.getSkuCode(), SKUCODE_COLUMN_INDEX);
+			String description = reader.readFromExcel(rowIndex, CellIndex.PRODUCT_SHORT_DESCRIPTION);
+			if (!description.isEmpty()) {
+				product.setShortDescription(description);
+			}
+			productRepo.save(product);
+			log.info("PRODUCT WITH SKU[" + product.getSkuCode() + "] IS UPDATED WITH NEW SHORT DESCRIPTION");
 		}
 	}
 

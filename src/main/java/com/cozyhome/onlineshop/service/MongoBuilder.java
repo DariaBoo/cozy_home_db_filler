@@ -31,6 +31,8 @@ import com.cozyhome.onlineshop.repository.ImageProductRepository;
 import com.cozyhome.onlineshop.repository.MaterialRepository;
 import com.cozyhome.onlineshop.repository.ProductRepository;
 import com.cozyhome.onlineshop.util.CellIndex;
+import com.cozyhome.onlineshop.util.DataMapper;
+import com.cozyhome.onlineshop.util.DataReader;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -265,6 +267,7 @@ public class MongoBuilder {
 		int IMAGE_START_INDEX_COLOR1 = CellIndex.PRODUCT_IMAGE_START_INDEX_COLOR1;
 		int IMAGE_START_INDEX_COLOR2 = CellIndex.PRODUCT_IMAGE_START_INDEX_COLOR2;
 		int IMAGE_START_INDEX_COLOR3 = CellIndex.PRODUCT_IMAGE_START_INDEX_COLOR3;
+		final int countOfUniqueFirstImage = 5;
 		final int countOfUniqueImages = 4;
 		final int nextStartIndex = 5;//count of image paths for every unique image
 
@@ -274,7 +277,7 @@ public class MongoBuilder {
 
 		ImageDto imagePath;
 		if (!color1.isEmpty()) {			
-			for (int i = 0; i < countOfUniqueImages; i++) {
+			for (int i = 0; i < countOfUniqueFirstImage; i++) {
 				imagePath = reader.readImagePaths(rowIndex, IMAGE_START_INDEX_COLOR1);
 				boolean isMain = i==0 ? true : false;
 				if (!imagePath.getPreviewImageName().isEmpty()) {
