@@ -7,8 +7,9 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import com.cozyhome.onlineshop.service.MongoManager;
+import com.cozyhome.onlineshop.service.DataManager;
 import com.cozyhome.onlineshop.service.DataUpdater;
+import com.cozyhome.onlineshop.service.MongoManager;
 import com.cozyhome.onlineshop.service.PostgresManager;
 
 import lombok.RequiredArgsConstructor;
@@ -19,9 +20,10 @@ import lombok.RequiredArgsConstructor;
 @SpringBootApplication
 public class DataBaseFillerApplication {
 
-    private final MongoManager dataManager;
+    private final MongoManager mongoManager;
+    private final PostgresManager postgresManager;
+    private final DataManager dataManager;
     private final DataUpdater dataUpdater;
-    private final PostgresManager manager;
 
 
     public static void main(String[] args) {
@@ -31,7 +33,8 @@ public class DataBaseFillerApplication {
     @Bean
     public CommandLineRunner loadData() {
       return args -> {
-    	  dataManager.createUserRoleDataBase();
+    	  dataUpdater.updateImageProduct();
+//    	  dataManager.updateProductDataBase();
 //	      manager.createDataBase();
 //    	  dataManager.createProductDataBase();
 //          dataUpdater.updateProductAvailable();

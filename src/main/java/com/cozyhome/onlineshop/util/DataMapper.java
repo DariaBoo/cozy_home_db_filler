@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Component
 public class DataMapper {
+
 	public short mapToShort(String value) {
 		if (!value.isEmpty()) {
 			return Short.parseShort(value);
@@ -38,4 +39,5 @@ public class DataMapper {
 	public boolean mapToBoolean(String value) {
 		return Boolean.parseBoolean(value);
 	}
+
 }
