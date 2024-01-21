@@ -21,11 +21,11 @@ import lombok.RequiredArgsConstructor;
 @SpringBootApplication
 public class DataBaseFillerApplication {
 
-    private final MongoManager mongoManager;
     private final PostgresManager postgresManager;
     private final PostgresBuilder postgresBuilder;
     private final DataManager dataManager;
     private final DataUpdater dataUpdater;
+    private final MongoManager mongoManager;
 
 
     public static void main(String[] args) {
