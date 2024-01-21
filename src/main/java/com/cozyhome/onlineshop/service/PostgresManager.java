@@ -6,10 +6,12 @@ import java.util.Random;
 import org.springframework.stereotype.Component;
 
 import com.cozyhome.onlineshop.model.Inventory;
+import com.cozyhome.onlineshop.model.Product;
 import com.cozyhome.onlineshop.model.ProductColor;
 import com.cozyhome.onlineshop.model.User;
 import com.cozyhome.onlineshop.repository.InventoryRepository;
 import com.cozyhome.onlineshop.repository.ProductColorRepository;
+import com.cozyhome.onlineshop.repository.ProductRepository;
 import com.cozyhome.onlineshop.repository.UserRepository;
 import com.cozyhome.onlineshop.util.SqlExecuter;
 
@@ -26,23 +28,22 @@ public class PostgresManager {
 	private final ProductColorRepository productColorRepo;
 	private final InventoryRepository inventoryRepo;
 	private final UserRepository userRepo;
+	private final ProductRepository productRepo;
 	
 	private String createDbFile = "/create_db.sql";
-	private String createUserFile = "/create_user.sql";
-	private String createTablesFile = "/create_tables.sql";
+//	private String createUserFile = "/create_user.sql";
+	private String createTablesFile = "/create_tables2.sql";
 	private String createBasketTable = "/create_table_basket_items.sql";
 	private String createFavoriteTable = "/create_table_favorite_products.sql";
+	private String createReviewTable = "/create_review_table.sql";
 
 	public void createDataBase() {
 		log.info("0 STEP[CREATE DATABASE]");
-//		executer.executeSqlFromFile(createUserFile);
-//		executer.executeSqlFromFile(createDbFile);
-//		executer.executeSqlFromFile(createTablesFile);
-
-//		builder.buildProductColorTable();
+		executer.executeSqlFromFile(createTablesFile);		
+		builder.buildProductColorTable();
 //		fillInventory();
-		executer.executeSqlFromFile(createFavoriteTable);
-		fillFavoriteProducts();
+//		fillFavoriteProducts();
+		fillBasket();
 	}
 
 	private void fillInventory() {
@@ -61,10 +62,10 @@ public class PostgresManager {
 	}
 	
 	public void fillFavoriteProducts() {
-		List<ProductColor> productColorList = productColorRepo.findAll();
+		List<Product> products = productRepo.findAll();
 		List<User> users = userRepo.findAll();
-		for (ProductColor productColor : productColorList) {
-			builder.buildFavoriteProducts(productColor,users.get(new Random().nextInt(users.size())).getId());			
+		for (Product product : products) {
+			builder.buildFavoriteProducts(product.getSkuCode(),users.get(new Random().nextInt(users.size())).getId());			
 		}		
 	}
 	

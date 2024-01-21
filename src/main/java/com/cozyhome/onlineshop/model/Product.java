@@ -47,7 +47,7 @@ public class Product {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     @Indexed
-    private float averageRating;
+    private Float averageRating;
     private byte popularRating;
     @Indexed
     @DBRef

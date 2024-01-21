@@ -5,8 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,15 +23,14 @@ public class FavoriteProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@ManyToOne
-	@JoinColumn(name = "productColor_id", nullable = false)
-	private ProductColor productColor;
+	@Column(name = "product_skucode")
+	private String productSkuCode;
 	
 	@Column(name = "user_id")
 	private String userId;
 	
-	public FavoriteProduct(ProductColor productColor, String userId) {
-		this.productColor = productColor;
+	public FavoriteProduct(String productSkuCode, String userId) {
+		this.productSkuCode = productSkuCode;
 		this.userId = userId;
 	}
 }
