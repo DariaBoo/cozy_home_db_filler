@@ -5,15 +5,23 @@ import static com.cozyhome.onlineshop.util.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_
 import static com.cozyhome.onlineshop.util.CellIndex.PRODUCT_QUANTITY_FOR_COLOR_59;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.OptionalDouble;
 
 import org.springframework.stereotype.Component;
 
 import com.cozyhome.onlineshop.dto.ProductMeasurementsDto;
+import com.cozyhome.onlineshop.model.Inventory;
 import com.cozyhome.onlineshop.model.Product;
+import com.cozyhome.onlineshop.model.Review;
+import com.cozyhome.onlineshop.repository.InventoryRepository;
 import com.cozyhome.onlineshop.repository.ProductRepository;
+import com.cozyhome.onlineshop.repository.ReviewRepository;
 import com.cozyhome.onlineshop.util.CellIndex;
 import com.cozyhome.onlineshop.util.DataReader;
 import com.cozyhome.onlineshop.util.RowIndex;
@@ -28,6 +36,8 @@ public class DataUpdater {
 	private final ProductRepository productRepo;
 	private final MongoBuilder builder;
 	private final DataReader reader;
+	private final ReviewRepository reviewRepo;
+	private final InventoryRepository inventoryRepo;
 	private final Map<Integer, Integer> colorsQuantityConstants = new HashMap<>();
 	
 	private final int SKUCODE_COLUMN_INDEX = 0;
@@ -36,6 +46,11 @@ public class DataUpdater {
 		colorsQuantityConstants.put(0, PRODUCT_QUANTITY_FOR_COLOR_17);
 		colorsQuantityConstants.put(1, PRODUCT_QUANTITY_FOR_COLOR_38);
 		colorsQuantityConstants.put(2, PRODUCT_QUANTITY_FOR_COLOR_59);
+	}
+	
+	public void setNewProductsQuantity() {
+		List<Product> newProducts = productRepo.findAllByStatus("NEW");
+		newProducts.stream().map(Product::getSkuCode).forEach(System.out::println);
 	}
 
 	public void updatePriceWithDiscount() {
@@ -164,5 +179,37 @@ public class DataUpdater {
 		Float floatValue = Float.parseFloat(value);
         floatValue = Math.round(floatValue * 10.0f) / 10.0f;
         return floatValue;
+	}
+	
+	public void updateProductAvailability() {
+		List<Product> products = productRepo.findAll();
+		for(Product product : products) {
+			int quantity = inventoryRepo.findByProductColorProductSkuCode(product.getSkuCode()).stream().mapToInt(Inventory::getQuantity).sum();
+			if(quantity > 0) {
+				product.setAvailable(true);
+			} else {
+				product.setAvailable(false);
+			}
+			log.info("SET AVAILABILITY [" + product.getAvailable() + "] FOR PRODUCT ["  + product.getSkuCode() + "] WITH QUANTITY [" + quantity + "].");
+			productRepo.save(product);
+		}
+	}
+	
+	public void updateProductAverageRating() {
+		List<Product> products = productRepo.findAll();
+		 DecimalFormat decimalFormat = new DecimalFormat("#.#", DecimalFormatSymbols.getInstance(Locale.US));
+
+		for(Product product : products) {
+			OptionalDouble averageRating = reviewRepo.findReviewsByProductSkuCode(product.getSkuCode()).stream().mapToInt(Review::getRating).average();
+			
+			if(averageRating.isPresent()) {
+				float formattedRating = Float.parseFloat(decimalFormat.format(averageRating.getAsDouble()));
+	            product.setAverageRating(formattedRating);
+			} else {
+				product.setAverageRating(null);
+			}
+			log.info("SET AVERAGE RATING [" + product.getAverageRating() + "] FOR PRODUCT ["  + product.getSkuCode() + "].");
+			productRepo.save(product);
+		}
 	}
 }

@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import com.cozyhome.onlineshop.service.DataManager;
 import com.cozyhome.onlineshop.service.DataUpdater;
 import com.cozyhome.onlineshop.service.MongoManager;
+import com.cozyhome.onlineshop.service.PostgresBuilder;
 import com.cozyhome.onlineshop.service.PostgresManager;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class DataBaseFillerApplication {
 
     private final MongoManager mongoManager;
     private final PostgresManager postgresManager;
+    private final PostgresBuilder postgresBuilder;
     private final DataManager dataManager;
     private final DataUpdater dataUpdater;
 
@@ -33,13 +35,7 @@ public class DataBaseFillerApplication {
     @Bean
     public CommandLineRunner loadData() {
       return args -> {
-    	  dataUpdater.updateImageProduct();
-//    	  dataManager.updateProductDataBase();
-//	      manager.createDataBase();
-//    	  dataManager.createProductDataBase();
-//          dataUpdater.updateProductAvailable();
-//    	  dataUpdater.updateProductDescription();
-    	  //dataUpdater.updateProductMeasurements();
+    	  dataUpdater.setNewProductsQuantity();
       };
   }
 }

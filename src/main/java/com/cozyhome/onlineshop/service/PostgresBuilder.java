@@ -104,12 +104,12 @@ public class PostgresBuilder {
 				basketItemSaved.getProductColor().getColorHex());
 	}	
 	
-	public void buildFavoriteProducts(ProductColor productColor, String userId) {
-		FavoriteProduct itemToSave = new FavoriteProduct();
-		itemToSave.setProductColor(productColor);
-		itemToSave.setUserId(userId);
-		FavoriteProduct itemSaved = favoriteRepo.save(itemToSave);
+	public void buildFavoriteProducts(String skuCode, String userId) {
+		FavoriteProduct productToSave = new FavoriteProduct();
+		productToSave.setProductSkuCode(skuCode);
+		productToSave.setUserId(userId);
+		FavoriteProduct itemSaved = favoriteRepo.save(productToSave);
 	
-		log.info("FAVORITE ITEM WITH SKU CODE [{}] AND COLOR HEX [{}] SAVED.", itemSaved.getProductColor().getProductSkuCode(), itemSaved.getProductColor().getColorHex());
+		log.info("FAVORITE ITEM WITH SKU CODE [{}] AND COLOR HEX [{}] SAVED.", itemSaved.getProductSkuCode());
 	}
 }

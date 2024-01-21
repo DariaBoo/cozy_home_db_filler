@@ -158,7 +158,8 @@ public class MongoBuilder {
 				.collection(collectionRepo
 						.getByName(reader.readFromExcel(rowIndex, CellIndex.PRODUCT_COLLECTION).toLowerCase().trim()))
 				.subCategory(categoryRepo.getCategoryById(categoryId)).createdAt(LocalDateTime.now())
-				.averageRating(new Random().nextInt(6)).popularRating((byte) new Random().nextInt(6))
+				.averageRating(new Random().nextFloat(6))
+				.popularRating((byte) new Random().nextInt(6))
 				.materials(buildMaterialsList(rowIndex))
 				.weight(mapper.mapToFloat(reader.readFromExcel(rowIndex, CellIndex.PRODUCT_WEIGHT)))
 				.height(mapper.mapToFloat(reader.readFromExcel(rowIndex, CellIndex.PRODUCT_HEIGHT)))

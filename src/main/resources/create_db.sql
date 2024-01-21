@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS inventory_management 
+CREATE DATABASE IF NOT EXISTS postgres 
     WITH 
     OWNER = admin
     ENCODING = 'UTF8'
